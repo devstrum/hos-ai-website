@@ -16,6 +16,25 @@ const THEME = {
 
 const gridBg = `repeating-linear-gradient(0deg, ${THEME.rule}, ${THEME.rule} 1px, transparent 1px, transparent 32px), repeating-linear-gradient(90deg, ${THEME.rule}, ${THEME.rule} 1px, transparent 1px, transparent 32px)`;
 
+// Shared responsive gutter - fluid between phone and desktop.
+const PAD_X = 'clamp(20px, 6vw, 48px)';
+
+// Tracks a single breakpoint via matchMedia - used to switch layouts
+// (nav, table-like grids) that can't be solved with pure CSS (clamp/auto-fit).
+const useIsMobile = (breakpoint = 760) => {
+  const query = `(max-width: ${breakpoint}px)`;
+  const [isMobile, setIsMobile] = React.useState(() =>
+    typeof window !== 'undefined' ? window.matchMedia(query).matches : false
+  );
+  React.useEffect(() => {
+    const mql = window.matchMedia(query);
+    const onChange = (e) => setIsMobile(e.matches);
+    mql.addEventListener('change', onChange);
+    return () => mql.removeEventListener('change', onChange);
+  }, [query]);
+  return isMobile;
+};
+
 const CornerTicks = () => (
   <React.Fragment>
     {[0, 1, 2, 3].map(i => (
@@ -73,44 +92,96 @@ const NAV_LINKS = [
 
 const CONTACT_EMAIL = 'hello@ai.houseofshafaq.com';
 
-const SiteNav = ({ active }) => (
+const SiteNav = ({ active }) => {
+  const isMobile = useIsMobile();
+  const [open, setOpen] = React.useState(false);
+  React.useEffect(() => { if (!isMobile) setOpen(false); }, [isMobile]);
+
+  return (
   <React.Fragment>
   <style>{`
     .hos-client-link img { filter: grayscale(1); opacity: .7; transition: filter .15s ease, opacity .15s ease; }
     .hos-client-link span { color: ${THEME.muted}; transition: color .15s ease; }
     .hos-client-link:hover img { filter: none; opacity: 1; }
     .hos-client-link:hover span { color: ${THEME.ink}; }
+    .hos-success-link span { transition: color .15s ease, border-color .15s ease; }
+    .hos-success-link:hover span { color: ${THEME.ink}; border-color: ${THEME.accent}; }
+    @keyframes hos-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    .hos-marquee-track { animation: hos-marquee 30s linear infinite; }
+    .hos-marquee-track:hover { animation-play-state: paused; }
   `}</style>
   <header style={{
     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-    padding: '20px 48px', borderBottom: `1px solid ${THEME.rule}`,
+    padding: `16px ${PAD_X}`, borderBottom: `1px solid ${THEME.rule}`,
     position: 'sticky', top: 0, background: THEME.bg, zIndex: 50,
   }}>
-    <a href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 12 }}>
+    <a href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 12, flexShrink: 0 }}>
       <HOSLogo height={22} accent={THEME.accent} />
     </a>
-    <nav style={{ display: 'flex', gap: 28, fontSize: 12, letterSpacing: '.1em', textTransform: 'uppercase' }}>
+
+    {!isMobile && (
+      <React.Fragment>
+        <nav style={{ display: 'flex', gap: 28, fontSize: 12, letterSpacing: '.1em', textTransform: 'uppercase' }}>
+          {NAV_LINKS.map(l => (
+            <a key={l.key} href={l.href} style={{
+              color: l.key === active ? THEME.ink : THEME.muted,
+              textDecoration: 'none', display: 'flex', alignItems: 'baseline', gap: 4,
+            }}>
+              {l.label}
+            </a>
+          ))}
+        </nav>
+        <a href={`mailto:${CONTACT_EMAIL}`} style={{ textDecoration: 'none' }}>
+          <button style={{ padding: '8px 16px', background: THEME.ink, color: THEME.bg, border: 0, fontSize: 11, fontWeight: 600, letterSpacing: '.15em', fontFamily: 'inherit', cursor: 'pointer' }}>
+            BOOK INTAKE
+          </button>
+        </a>
+      </React.Fragment>
+    )}
+
+    {isMobile && (
+      <button
+        onClick={() => setOpen(o => !o)}
+        aria-label={open ? 'Close menu' : 'Open menu'}
+        aria-expanded={open}
+        style={{ background: 'transparent', border: 0, padding: 8, cursor: 'pointer', display: 'flex', flexDirection: 'column', gap: 5, flexShrink: 0 }}
+      >
+        <span style={{ width: 22, height: 2, background: THEME.ink, transition: 'transform .15s ease', transform: open ? 'translateY(7px) rotate(45deg)' : 'none' }} />
+        <span style={{ width: 22, height: 2, background: THEME.ink, opacity: open ? 0 : 1, transition: 'opacity .15s ease' }} />
+        <span style={{ width: 22, height: 2, background: THEME.ink, transition: 'transform .15s ease', transform: open ? 'translateY(-7px) rotate(-45deg)' : 'none' }} />
+      </button>
+    )}
+  </header>
+
+  {isMobile && open && (
+    <nav style={{
+      display: 'flex', flexDirection: 'column', gap: 4,
+      padding: `12px ${PAD_X} 24px`, borderBottom: `1px solid ${THEME.rule}`,
+      position: 'sticky', top: 57, background: THEME.bg, zIndex: 49,
+    }}>
       {NAV_LINKS.map(l => (
-        <a key={l.key} href={l.href} style={{
+        <a key={l.key} href={l.href} onClick={() => setOpen(false)} style={{
           color: l.key === active ? THEME.ink : THEME.muted,
-          textDecoration: 'none', display: 'flex', alignItems: 'baseline', gap: 4,
+          textDecoration: 'none', fontSize: 15, letterSpacing: '.05em', textTransform: 'uppercase',
+          padding: '14px 0', borderBottom: `1px solid ${THEME.rule}`,
         }}>
           {l.label}
         </a>
       ))}
+      <a href={`mailto:${CONTACT_EMAIL}`} style={{ textDecoration: 'none', marginTop: 16 }}>
+        <button style={{ width: '100%', padding: '14px 16px', background: THEME.ink, color: THEME.bg, border: 0, fontSize: 12, fontWeight: 600, letterSpacing: '.15em', fontFamily: 'inherit', cursor: 'pointer' }}>
+          BOOK INTAKE
+        </button>
+      </a>
     </nav>
-    <a href={`mailto:${CONTACT_EMAIL}`} style={{ textDecoration: 'none' }}>
-      <button style={{ padding: '8px 16px', background: THEME.ink, color: THEME.bg, border: 0, fontSize: 11, fontWeight: 600, letterSpacing: '.15em', fontFamily: 'inherit', cursor: 'pointer' }}>
-        BOOK INTAKE
-      </button>
-    </a>
-  </header>
+  )}
   </React.Fragment>
-);
+  );
+};
 
 const SiteFooter = ({ heading = "Let's build your", headingAccent = 'AI arm.' }) => (
-  <section id="contact" style={{ padding: '120px 48px', borderTop: `1px solid ${THEME.ink}` }}>
-    <h2 style={{ fontFamily: '"Geist", sans-serif', fontSize: 88, fontWeight: 600, letterSpacing: '-0.05em', margin: '0 0 32px', lineHeight: 1 }}>
+  <section id="contact" style={{ padding: `clamp(56px, 14vw, 120px) ${PAD_X}`, borderTop: `1px solid ${THEME.ink}` }}>
+    <h2 style={{ fontFamily: '"Geist", sans-serif', fontSize: 'clamp(38px, 9vw, 88px)', fontWeight: 600, letterSpacing: '-0.05em', margin: '0 0 32px', lineHeight: 1 }}>
       {heading}<br /><span style={{ color: THEME.accent }}>{headingAccent}</span>
     </h2>
     <div style={{ display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
@@ -127,7 +198,7 @@ const SiteFooter = ({ heading = "Let's build your", headingAccent = 'AI arm.' })
       </p>
       <div style={{ fontSize: 12, color: THEME.muted, fontFamily: 'Inter, sans-serif' }}>Saad Mohammed · Founder, House of Shafaq</div>
     </div>
-    <div style={{ marginTop: 56, display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 24, paddingTop: 32, borderTop: `1px solid ${THEME.rule}` }}>
+    <div style={{ marginTop: 56, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 24, paddingTop: 32, borderTop: `1px solid ${THEME.rule}` }}>
       {[['ADDRESS', CONTACT.address], ['EMAIL', CONTACT.email], ['PHONE', CONTACT.phone], ['HOURS', CONTACT.hours]].map(([l, v]) => (
         <div key={l}>
           <div style={{ fontSize: 10, color: THEME.accent, letterSpacing: '.15em', marginBottom: 6, fontFamily: '"Geist Mono", monospace' }}>{l}</div>
@@ -184,19 +255,28 @@ const INTEGRATIONS = [
   { name: 'Notion', domain: 'notion.so' },
 ];
 
-const IntegrationsBanner = ({ label = 'INTEGRATES WITH THE TOOLS YOU ALREADY RUN' }) => (
-  <div style={{ borderTop: `1px solid ${THEME.rule}`, borderBottom: `1px solid ${THEME.rule}`, padding: '22px 48px', display: 'flex', alignItems: 'center', gap: 40, flexWrap: 'wrap' }}>
-    <span style={{ fontSize: 10, color: THEME.muted, letterSpacing: '.2em', fontFamily: '"Geist Mono", monospace', whiteSpace: 'nowrap' }}>{label}</span>
-    <div style={{ display: 'flex', alignItems: 'center', gap: 32, flexWrap: 'wrap' }}>
-      {INTEGRATIONS.map((it) => (
-        <div key={it.name} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <FaviconOrInitials name={it.name} domain={it.domain} size={20} />
-          <span style={{ fontFamily: '"Geist", sans-serif', fontWeight: 600, fontSize: 15, letterSpacing: '-0.01em', color: THEME.ink, opacity: .85 }}>{it.name}</span>
-        </div>
-      ))}
+const IntegrationsBanner = ({ label = 'INTEGRATES WITH THE TOOLS YOU ALREADY RUN' }) => {
+  const isMobile = useIsMobile();
+  return (
+  <div style={{ borderTop: `1px solid ${THEME.rule}`, borderBottom: `1px solid ${THEME.rule}`, padding: `18px ${PAD_X}`, display: 'flex', flexDirection: isMobile ? 'column' : 'row', alignItems: isMobile ? 'stretch' : 'center', gap: isMobile ? 12 : 40 }}>
+    <span style={{ fontSize: 10, color: THEME.muted, letterSpacing: '.2em', fontFamily: '"Geist Mono", monospace', whiteSpace: isMobile ? 'normal' : 'nowrap', flexShrink: 0 }}>{label}</span>
+    <div style={{
+      overflow: 'hidden', flex: 1, minWidth: 0,
+      maskImage: 'linear-gradient(90deg, transparent, black 24px, black calc(100% - 24px), transparent)',
+      WebkitMaskImage: 'linear-gradient(90deg, transparent, black 24px, black calc(100% - 24px), transparent)',
+    }}>
+      <div className="hos-marquee-track" style={{ display: 'flex', alignItems: 'center', gap: 32, width: 'max-content' }}>
+        {[...INTEGRATIONS, ...INTEGRATIONS].map((it, i) => (
+          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+            <FaviconOrInitials name={it.name} domain={it.domain} size={20} />
+            <span style={{ fontFamily: '"Geist", sans-serif', fontWeight: 600, fontSize: 15, letterSpacing: '-0.01em', color: THEME.ink, opacity: .85, whiteSpace: 'nowrap' }}>{it.name}</span>
+          </div>
+        ))}
+      </div>
     </div>
   </div>
-);
+  );
+};
 
 // HOS AI's own clients
 const TRUSTED_BY = [
@@ -208,10 +288,12 @@ const TRUSTED_BY = [
   { name: 'Saad Sells', domain: null, href: 'https://www.instagram.com/saadsells' },
 ];
 
-const TrustedByBar = ({ label = 'CLIENTS ACROSS UK · UAE · INDIA · AUSTRALIA' }) => (
-  <div style={{ padding: '28px 48px', display: 'flex', alignItems: 'center', gap: 40, flexWrap: 'wrap' }}>
-    <span style={{ fontSize: 10, color: THEME.muted, letterSpacing: '.2em', fontFamily: '"Geist Mono", monospace', whiteSpace: 'nowrap' }}>{label}</span>
-    <div style={{ display: 'flex', alignItems: 'center', gap: 32, flexWrap: 'wrap' }}>
+const TrustedByBar = ({ label = 'CLIENTS ACROSS UK · UAE · INDIA · AUSTRALIA' }) => {
+  const isMobile = useIsMobile();
+  return (
+  <div style={{ padding: `20px ${PAD_X}`, display: 'flex', flexDirection: isMobile ? 'column' : 'row', alignItems: isMobile ? 'stretch' : 'center', gap: isMobile ? 14 : 24 }}>
+    <span style={{ fontSize: 10, color: THEME.muted, letterSpacing: '.2em', fontFamily: '"Geist Mono", monospace', whiteSpace: isMobile ? 'normal' : 'nowrap' }}>{label}</span>
+    <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 20 : 32, flexWrap: 'wrap' }}>
       {TRUSTED_BY.map((c) => (
         <a key={c.name} href={c.href} target="_blank" rel="noopener" className="hos-client-link" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
           <FaviconOrInitials name={c.name} domain={c.domain} size={18} />
@@ -220,7 +302,8 @@ const TrustedByBar = ({ label = 'CLIENTS ACROSS UK · UAE · INDIA · AUSTRALIA'
       ))}
     </div>
   </div>
-);
+  );
+};
 
 // Ringg's success stories - shown once, inside the Partners strip
 const RINGG_SUCCESS = [
@@ -233,13 +316,13 @@ const RINGG_SUCCESS = [
 const PartnersStrip = () => {
   const { ink, accent, muted, rule, bg } = THEME;
   return (
-    <section style={{ padding: '56px 48px', borderTop: `1px solid ${ink}`, borderBottom: `1px solid ${rule}` }}>
+    <section style={{ padding: `40px ${PAD_X}`, borderTop: `1px solid ${ink}`, borderBottom: `1px solid ${rule}` }}>
       <div style={{ fontSize: 11, color: accent, letterSpacing: '.3em', marginBottom: 24 }}>PREFERRED PARTNERS</div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 48 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 48 }}>
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 14 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 14, flexWrap: 'wrap' }}>
             <FaviconOrInitials name="Ringg" domain="ringg.ai" size={30} />
-            <span style={{ fontFamily: '"Geist", sans-serif', fontSize: 28, fontWeight: 600, letterSpacing: '-0.03em' }}>Ringg</span>
+            <span style={{ fontFamily: '"Geist", sans-serif', fontSize: 'clamp(22px, 4vw, 28px)', fontWeight: 600, letterSpacing: '-0.03em' }}>Ringg</span>
             <span style={{ fontSize: 9, color: accent, letterSpacing: '.1em', border: `1px solid ${accent}`, borderRadius: 3, padding: '2px 6px', fontFamily: '"Geist Mono", monospace' }}>VOICE AI · UAE</span>
           </div>
           <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 14, lineHeight: 1.6, color: muted, margin: '0 0 16px', maxWidth: 460 }}>
@@ -248,17 +331,17 @@ const PartnersStrip = () => {
           <div style={{ fontSize: 10, color: muted, letterSpacing: '.15em', marginBottom: 10 }}>SUCCESS STORIES · BUILT ON RINGG</div>
           <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
             {RINGG_SUCCESS.map(c => (
-              <a key={c.name} href={c.href} target="_blank" rel="noopener" className="hos-client-link" style={{ display: 'flex', alignItems: 'center', gap: 6, textDecoration: 'none' }}>
+              <a key={c.name} href={c.href} target="_blank" rel="noopener" className="hos-success-link" style={{ display: 'flex', alignItems: 'center', gap: 6, textDecoration: 'none' }}>
                 <FaviconOrInitials name={c.name} domain={c.domain} size={16} />
-                <span style={{ fontFamily: '"Geist", sans-serif', fontSize: 13 }}>{c.name}</span>
+                <span style={{ fontFamily: '"Geist", sans-serif', fontSize: 13, color: THEME.ink }}>{c.name}</span>
               </a>
             ))}
           </div>
         </div>
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 14 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 14, flexWrap: 'wrap' }}>
             <FaviconOrInitials name="Meta" domain="about.meta.com" size={30} />
-            <span style={{ fontFamily: '"Geist", sans-serif', fontSize: 28, fontWeight: 600, letterSpacing: '-0.03em' }}>Meta</span>
+            <span style={{ fontFamily: '"Geist", sans-serif', fontSize: 'clamp(22px, 4vw, 28px)', fontWeight: 600, letterSpacing: '-0.03em' }}>Meta</span>
             <span style={{ fontSize: 9, color: accent, letterSpacing: '.1em', border: `1px solid ${accent}`, borderRadius: 3, padding: '2px 6px', fontFamily: '"Geist Mono", monospace' }}>WHATSAPP BSP</span>
           </div>
           <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 14, lineHeight: 1.6, color: muted, margin: 0, maxWidth: 460 }}>
@@ -270,4 +353,4 @@ const PartnersStrip = () => {
   );
 };
 
-export { THEME, gridBg, CornerTicks, HOSLogo, SiteNav, SiteFooter, NAV_LINKS, CONTACT, CONTACT_EMAIL, IntegrationsBanner, TrustedByBar, PartnersStrip, FaviconOrInitials, TRUSTED_BY, RINGG_SUCCESS, INTEGRATIONS };
+export { THEME, gridBg, CornerTicks, HOSLogo, SiteNav, SiteFooter, NAV_LINKS, CONTACT, CONTACT_EMAIL, IntegrationsBanner, TrustedByBar, PartnersStrip, FaviconOrInitials, TRUSTED_BY, RINGG_SUCCESS, INTEGRATIONS, PAD_X, useIsMobile };

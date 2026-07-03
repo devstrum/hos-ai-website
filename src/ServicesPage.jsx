@@ -1,4 +1,4 @@
-import { THEME, gridBg, CornerTicks, SiteNav, SiteFooter, IntegrationsBanner } from './theme.jsx';
+import { THEME, gridBg, CornerTicks, SiteNav, SiteFooter, IntegrationsBanner, PAD_X, useIsMobile } from './theme.jsx';
 
 // hos-services-content.jsx - HOS AI Services detail page
 // Depends on: hos-shared.jsx
@@ -50,14 +50,15 @@ const SERVICES_DETAIL = [
 
 const ServicesPage = () => {
   const { bg, ink, accent, muted, rule } = THEME;
+  const isMobile = useIsMobile();
   return (
     <div style={{ background: bg, color: ink, fontFamily: '"Geist Mono", monospace', minHeight: '100%' }} data-screen-label="Services">
       <SiteNav active="services" />
 
-      <section style={{ position: 'relative', padding: '72px 48px 56px', backgroundImage: gridBg }}>
+      <section style={{ position: 'relative', padding: `clamp(48px, 10vw, 72px) ${PAD_X} clamp(36px, 8vw, 56px)`, backgroundImage: gridBg }}>
         <CornerTicks />
         <div style={{ fontSize: 11, color: accent, letterSpacing: '.3em', marginBottom: 24 }}>SERVICES</div>
-        <h1 style={{ fontFamily: '"Geist", sans-serif', fontWeight: 600, fontSize: 80, lineHeight: .96, letterSpacing: '-0.05em', margin: '0 0 24px', maxWidth: 780 }}>
+        <h1 style={{ fontFamily: '"Geist", sans-serif', fontWeight: 600, fontSize: 'clamp(38px, 9vw, 80px)', lineHeight: .96, letterSpacing: '-0.05em', margin: '0 0 24px', maxWidth: 780 }}>
           Six ways we make AI <span style={{ color: accent }}>pay for itself.</span>
         </h1>
         <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 18, lineHeight: 1.5, color: muted, maxWidth: 620 }}>
@@ -67,9 +68,9 @@ const ServicesPage = () => {
 
       <IntegrationsBanner />
 
-      <section style={{ padding: '96px 48px' }}>
+      <section style={{ padding: `clamp(48px, 10vw, 96px) ${PAD_X}` }}>
         {SERVICES_DETAIL.map((s, i) => (
-          <div key={s.n} style={{ display: 'grid', gridTemplateColumns: '80px 1fr 1fr', gap: 40, padding: '48px 0', borderTop: i === 0 ? 'none' : `1px solid ${rule}` }}>
+          <div key={s.n} style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '80px 1fr 1fr', gap: isMobile ? 16 : 40, padding: '48px 0', borderTop: i === 0 ? 'none' : `1px solid ${rule}` }}>
             <div style={{ fontSize: 12, color: accent, letterSpacing: '.15em', fontFamily: '"Geist Mono", monospace' }}>{s.n}</div>
             <div>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, marginBottom: 16, flexWrap: 'wrap' }}>

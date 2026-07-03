@@ -1,5 +1,5 @@
 import React from 'react';
-import { THEME, gridBg, CornerTicks, SiteNav, SiteFooter, FaviconOrInitials } from './theme.jsx';
+import { THEME, gridBg, CornerTicks, SiteNav, SiteFooter, FaviconOrInitials, PAD_X } from './theme.jsx';
 
 // hos-case-study-content.jsx - HOS AI Work page: featured AI case study + project index
 // (real House of Shafaq brand/production projects, AI systems shipped, and Ringg partner work)
@@ -49,17 +49,17 @@ const CaseStudyPage = () => {
     <div style={{ background: bg, color: ink, fontFamily: '"Geist Mono", monospace', minHeight: '100%' }} data-screen-label="Work">
       <SiteNav active="work" />
 
-      <section style={{ position: 'relative', padding: '72px 48px 48px', backgroundImage: gridBg }}>
+      <section style={{ position: 'relative', padding: `clamp(48px, 10vw, 72px) ${PAD_X} clamp(32px, 8vw, 48px)`, backgroundImage: gridBg }}>
         <CornerTicks />
         <div style={{ fontSize: 11, color: muted, letterSpacing: '.2em', marginBottom: 16 }}>{CASE.tag}</div>
-        <h1 style={{ fontFamily: '"Geist", sans-serif', fontSize: 72, fontWeight: 600, letterSpacing: '-0.04em', margin: '0 0 28px', lineHeight: 1.05, maxWidth: 820 }}>
+        <h1 style={{ fontFamily: '"Geist", sans-serif', fontSize: 'clamp(36px, 8vw, 72px)', fontWeight: 600, letterSpacing: '-0.04em', margin: '0 0 28px', lineHeight: 1.05, maxWidth: 820 }}>
           {CASE.headline.map((part, i) => Array.isArray(part) ? <span key={i} style={{ color: accent }}>{part[0]}</span> : <React.Fragment key={i}>{part}</React.Fragment>)}
         </h1>
         <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 18, lineHeight: 1.55, color: muted, maxWidth: 680, marginBottom: 40 }}>{CASE.summary}</p>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 24, maxWidth: 560, paddingTop: 32, borderTop: `1px solid ${rule}` }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 24, maxWidth: 560, paddingTop: 32, borderTop: `1px solid ${rule}` }}>
           {CASE.metrics.map(([n, l]) => (
             <div key={l}>
-              <div style={{ fontFamily: '"Geist", sans-serif', fontSize: 34, fontWeight: 600, letterSpacing: '-0.03em', color: ink }}>{n}</div>
+              <div style={{ fontFamily: '"Geist", sans-serif', fontSize: 'clamp(24px, 5vw, 34px)', fontWeight: 600, letterSpacing: '-0.03em', color: ink }}>{n}</div>
               <div style={{ fontFamily: 'Inter, sans-serif', fontSize: 11, color: muted, marginTop: 4, letterSpacing: '.05em' }}>{l}</div>
             </div>
           ))}
@@ -67,8 +67,8 @@ const CaseStudyPage = () => {
       </section>
 
       {/* Narrative */}
-      <section style={{ padding: '96px 48px', borderTop: `1px solid ${ink}` }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64 }}>
+      <section style={{ padding: `clamp(48px, 10vw, 96px) ${PAD_X}`, borderTop: `1px solid ${ink}` }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 64 }}>
           <div>
             {[['PROBLEM', CASE.problem], ['APPROACH', CASE.approach], ['BUILD', CASE.build]].map(([label, text]) => (
               <div key={label} style={{ marginBottom: 40 }}>
@@ -128,15 +128,15 @@ const CaseStudyPage = () => {
         </div>
       </section>
 
-      <section style={{ padding: '0 48px 96px' }}>
+      <section style={{ padding: `0 ${PAD_X} clamp(48px, 10vw, 96px)` }}>
         <a href="/#work" style={{ fontSize: 12, color: muted, letterSpacing: '.15em', textDecoration: 'none', borderBottom: `1px solid ${rule}`, paddingBottom: 2 }}>← BACK TO ALL WORK</a>
       </section>
 
       {/* AI systems shipped */}
-      <section style={{ padding: '96px 48px', borderTop: `1px solid ${ink}` }}>
+      <section style={{ padding: `clamp(48px, 10vw, 96px) ${PAD_X}`, borderTop: `1px solid ${ink}` }}>
         <div style={{ fontSize: 11, color: accent, letterSpacing: '.3em', marginBottom: 16 }}>AI SYSTEMS SHIPPED</div>
-        <h2 style={{ fontFamily: '"Geist", sans-serif', fontSize: 44, fontWeight: 600, letterSpacing: '-0.04em', margin: '0 0 48px' }}>What we build, to name a few.</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 1, background: rule, border: `1px solid ${rule}` }}>
+        <h2 style={{ fontFamily: '"Geist", sans-serif', fontSize: 'clamp(28px, 6vw, 44px)', fontWeight: 600, letterSpacing: '-0.04em', margin: '0 0 48px' }}>What we build, to name a few.</h2>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 1, background: rule, border: `1px solid ${rule}` }}>
           {AI_PROJECTS.map(([t, d, o]) => (
             <div key={t} style={{ background: bg, padding: 24 }}>
               <div style={{ fontFamily: '"Geist", sans-serif', fontSize: 18, fontWeight: 600, letterSpacing: '-0.02em', marginBottom: 10 }}>{t}</div>
@@ -148,7 +148,7 @@ const CaseStudyPage = () => {
       </section>
 
       {/* Ringg-powered deployments */}
-      <section style={{ padding: '0 48px 96px' }}>
+      <section style={{ padding: `0 ${PAD_X} clamp(48px, 10vw, 96px)` }}>
         <div style={{ fontSize: 11, color: accent, letterSpacing: '.3em', marginBottom: 16 }}>VOICE & WHATSAPP · VIA RINGG</div>
         <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 15, color: muted, maxWidth: 560, margin: '0 0 24px' }}>Our preferred voice AI partner Ringg's success stories in the region include:</p>
         <div style={{ display: 'flex', gap: 32, flexWrap: 'wrap' }}>
@@ -162,14 +162,14 @@ const CaseStudyPage = () => {
       </section>
 
       {/* House of Shafaq brand & production projects */}
-      <section style={{ padding: '0 48px 96px' }}>
+      <section style={{ padding: `0 ${PAD_X} clamp(48px, 10vw, 96px)` }}>
         <div style={{ fontSize: 11, color: accent, letterSpacing: '.3em', marginBottom: 16 }}>BRAND & PRODUCTION WORK · VIA HOUSE OF SHAFAQ</div>
-        <h2 style={{ fontFamily: '"Geist", sans-serif', fontSize: 36, fontWeight: 600, letterSpacing: '-0.03em', margin: '0 0 12px' }}>The network's own track record.</h2>
+        <h2 style={{ fontFamily: '"Geist", sans-serif', fontSize: 'clamp(24px, 5vw, 36px)', fontWeight: 600, letterSpacing: '-0.03em', margin: '0 0 12px' }}>The network's own track record.</h2>
         <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 15, color: muted, maxWidth: 620, margin: '0 0 40px' }}>
           HOS AI is backed by House of Shafaq's decade of brand and production work across the region - a sample below, more at{' '}
           <a href="https://www.houseofshafaq.com/projects" target="_blank" rel="noopener" style={{ color: ink, borderBottom: `1px solid ${accent}`, textDecoration: 'none' }}>houseofshafaq.com/projects</a>.
         </p>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 1, background: rule, border: `1px solid ${rule}` }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 1, background: rule, border: `1px solid ${rule}` }}>
           {HOS_PROJECTS.map(([t, cat, href]) => (
             <a key={t} href={href} target="_blank" rel="noopener" style={{ textDecoration: 'none', color: 'inherit' }}>
               <div style={{ background: bg, padding: 22, height: '100%', boxSizing: 'border-box' }}>
