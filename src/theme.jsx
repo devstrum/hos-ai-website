@@ -195,11 +195,11 @@ const SiteNav = ({ active }) => {
 const SiteFooter = ({ heading = "Let's build your", headingAccent = 'AI arm.' }) => {
   const [copied, copyEmail] = useCopyEmail(CONTACT_EMAIL);
   return (
-  <section id="contact" style={{ padding: `clamp(56px, 14vw, 120px) ${PAD_X}`, borderTop: `1px solid ${THEME.ink}` }}>
+  <section id="contact" style={{ padding: `clamp(56px, 14vw, 120px) ${PAD_X}`, borderTop: `1px solid ${THEME.ink}`, textAlign: 'center' }}>
     <h2 style={{ fontFamily: '"Geist", sans-serif', fontSize: 'clamp(38px, 9vw, 88px)', fontWeight: 600, letterSpacing: '-0.05em', margin: '0 0 32px', lineHeight: 1 }}>
       {heading}<br /><span style={{ color: THEME.accent }}>{headingAccent}</span>
     </h2>
-    <div style={{ display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
+    <div style={{ display: 'flex', gap: 16, alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }}>
       <a href={`mailto:${CONTACT_EMAIL}`} onClick={copyEmail} style={{ textDecoration: 'none' }}>
         <button style={{ padding: '18px 28px', background: THEME.ink, color: THEME.bg, border: 0, fontSize: 12, fontWeight: 600, letterSpacing: '.2em', fontFamily: 'inherit', cursor: 'pointer' }}>{copied ? 'EMAIL COPIED ✓' : 'BOOK INTAKE →'}</button>
       </a>
@@ -207,7 +207,8 @@ const SiteFooter = ({ heading = "Let's build your", headingAccent = 'AI arm.' })
         or email <span style={{ color: THEME.ink, borderBottom: `1px solid ${THEME.accent}` }}>{CONTACT_EMAIL}</span>
       </span>
     </div>
-    <div style={{ marginTop: 56, borderLeft: `2px solid ${THEME.accent}`, paddingLeft: 20, maxWidth: 640 }}>
+    <div style={{ marginTop: 56, maxWidth: 640, marginLeft: 'auto', marginRight: 'auto' }}>
+      <span style={{ display: 'inline-block', width: 24, height: 2, background: THEME.accent, marginBottom: 16 }} />
       <p style={{ fontFamily: '"Geist", sans-serif', fontSize: 17, fontWeight: 500, letterSpacing: '-0.01em', lineHeight: 1.45, margin: '0 0 10px', fontStyle: 'italic' }}>
         "Every founder in my network asks me who's building their AI. Now I have an answer."
       </p>
@@ -221,12 +222,12 @@ const SiteFooter = ({ heading = "Let's build your", headingAccent = 'AI arm.' })
         </div>
       ))}
     </div>
-    <footer style={{ marginTop: 40, paddingTop: 24, borderTop: `1px solid ${THEME.rule}`, display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', flexWrap: 'wrap', gap: 16 }}>
-      <div style={{ display: 'flex', gap: 32, alignItems: 'baseline', flexWrap: 'wrap' }}>
+    <footer style={{ marginTop: 40, paddingTop: 24, borderTop: `1px solid ${THEME.rule}`, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
+      <div style={{ display: 'flex', gap: 32, alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }}>
         <HOSLogo height={18} accent={THEME.accent} />
         <span style={{ fontSize: 11, color: THEME.muted, letterSpacing: '.1em', fontFamily: '"Geist Mono", monospace' }}>HOS AI · THE AI ARM OF HOUSE OF SHAFAQ · OPERATED BY DEVSTRUM LLP OUTSIDE THE UAE · © 2026 · AI.HOUSEOFSHAFAQ.COM</span>
       </div>
-      <nav style={{ display: 'flex', gap: 20, fontSize: 11, color: THEME.muted, letterSpacing: '.1em', fontFamily: '"Geist Mono", monospace' }}>
+      <nav style={{ display: 'flex', gap: 20, fontSize: 11, color: THEME.muted, letterSpacing: '.1em', fontFamily: '"Geist Mono", monospace', justifyContent: 'center', flexWrap: 'wrap' }}>
         {NAV_LINKS.map(l => <a key={l.key} href={l.href} style={{ color: THEME.muted, textDecoration: 'none' }}>{l.label.toUpperCase()}</a>)}
       </nav>
     </footer>
@@ -272,16 +273,15 @@ const INTEGRATIONS = [
 ];
 
 const IntegrationsBanner = ({ label = 'INTEGRATES WITH THE TOOLS YOU ALREADY RUN' }) => {
-  const isMobile = useIsMobile();
   return (
-  <div style={{ borderTop: `1px solid ${THEME.rule}`, borderBottom: `1px solid ${THEME.rule}`, padding: `18px ${PAD_X}`, display: 'flex', flexDirection: isMobile ? 'column' : 'row', alignItems: isMobile ? 'stretch' : 'center', gap: isMobile ? 12 : 40 }}>
-    <span style={{ fontSize: 10, color: THEME.muted, letterSpacing: '.2em', fontFamily: '"Geist Mono", monospace', whiteSpace: isMobile ? 'normal' : 'nowrap', flexShrink: 0 }}>{label}</span>
+  <div style={{ borderTop: `1px solid ${THEME.rule}`, borderBottom: `1px solid ${THEME.rule}`, padding: `18px ${PAD_X}`, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, textAlign: 'center' }}>
+    <span style={{ fontSize: 10, color: THEME.muted, letterSpacing: '.2em', fontFamily: '"Geist Mono", monospace' }}>{label}</span>
     <div style={{
-      overflow: 'hidden', flex: 1, minWidth: 0,
+      overflow: 'hidden', width: '100%', minWidth: 0,
       maskImage: 'linear-gradient(90deg, transparent, black 24px, black calc(100% - 24px), transparent)',
       WebkitMaskImage: 'linear-gradient(90deg, transparent, black 24px, black calc(100% - 24px), transparent)',
     }}>
-      <div className="hos-marquee-track" style={{ display: 'flex', alignItems: 'center', gap: 32, width: 'max-content' }}>
+      <div className="hos-marquee-track" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 32, width: 'max-content', margin: '0 auto' }}>
         {[...INTEGRATIONS, ...INTEGRATIONS].map((it, i) => (
           <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
             <FaviconOrInitials name={it.name} domain={it.domain} size={20} />
@@ -307,9 +307,9 @@ const TRUSTED_BY = [
 const TrustedByBar = ({ label = 'CLIENTS ACROSS UK · UAE · INDIA · AUSTRALIA' }) => {
   const isMobile = useIsMobile();
   return (
-  <div style={{ padding: `20px ${PAD_X}`, display: 'flex', flexDirection: isMobile ? 'column' : 'row', alignItems: isMobile ? 'stretch' : 'center', gap: isMobile ? 14 : 24 }}>
-    <span style={{ fontSize: 10, color: THEME.muted, letterSpacing: '.2em', fontFamily: '"Geist Mono", monospace', whiteSpace: isMobile ? 'normal' : 'nowrap' }}>{label}</span>
-    <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 20 : 32, flexWrap: 'wrap' }}>
+  <div style={{ padding: `20px ${PAD_X}`, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: isMobile ? 14 : 16, textAlign: 'center' }}>
+    <span style={{ fontSize: 10, color: THEME.muted, letterSpacing: '.2em', fontFamily: '"Geist Mono", monospace' }}>{label}</span>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: isMobile ? 20 : 32, flexWrap: 'wrap' }}>
       {TRUSTED_BY.map((c) => (
         <a key={c.name} href={c.href} target="_blank" rel="noopener" className="hos-client-link" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
           <FaviconOrInitials name={c.name} domain={c.domain} size={18} />
@@ -332,20 +332,20 @@ const RINGG_SUCCESS = [
 const PartnersStrip = () => {
   const { ink, accent, muted, rule, bg } = THEME;
   return (
-    <section style={{ padding: `40px ${PAD_X}`, borderTop: `1px solid ${ink}`, borderBottom: `1px solid ${rule}` }}>
+    <section style={{ padding: `40px ${PAD_X}`, borderTop: `1px solid ${ink}`, borderBottom: `1px solid ${rule}`, textAlign: 'center' }}>
       <div style={{ fontSize: 11, color: accent, letterSpacing: '.3em', marginBottom: 24 }}>PREFERRED PARTNERS</div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 48 }}>
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 14, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, marginBottom: 14, flexWrap: 'wrap' }}>
             <FaviconOrInitials name="Ringg" domain="ringg.ai" size={30} />
             <span style={{ fontFamily: '"Geist", sans-serif', fontSize: 'clamp(22px, 4vw, 28px)', fontWeight: 600, letterSpacing: '-0.03em' }}>Ringg</span>
             <span style={{ fontSize: 9, color: accent, letterSpacing: '.1em', border: `1px solid ${accent}`, borderRadius: 3, padding: '2px 6px', fontFamily: '"Geist Mono", monospace' }}>VOICE AI · UAE</span>
           </div>
-          <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 15, lineHeight: 1.6, color: muted, margin: '0 0 16px', maxWidth: 460 }}>
+          <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 15, lineHeight: 1.6, color: muted, margin: '0 auto 16px', maxWidth: 460 }}>
             Our preferred voice AI infrastructure. We're model & vendor agnostic - Ringg is what we curate and select for most conversational deployments in the UAE.
           </p>
           <div style={{ fontSize: 10, color: muted, letterSpacing: '.15em', marginBottom: 10 }}>SUCCESS STORIES · BUILT ON RINGG</div>
-          <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 20, flexWrap: 'wrap' }}>
             {RINGG_SUCCESS.map(c => (
               <a key={c.name} href={c.href} target="_blank" rel="noopener" className="hos-success-link" style={{ display: 'flex', alignItems: 'center', gap: 6, textDecoration: 'none' }}>
                 <FaviconOrInitials name={c.name} domain={c.domain} size={16} />
@@ -355,12 +355,12 @@ const PartnersStrip = () => {
           </div>
         </div>
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 14, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, marginBottom: 14, flexWrap: 'wrap' }}>
             <FaviconOrInitials name="Meta" domain="about.meta.com" size={30} />
             <span style={{ fontFamily: '"Geist", sans-serif', fontSize: 'clamp(22px, 4vw, 28px)', fontWeight: 600, letterSpacing: '-0.03em' }}>Meta</span>
             <span style={{ fontSize: 9, color: accent, letterSpacing: '.1em', border: `1px solid ${accent}`, borderRadius: 3, padding: '2px 6px', fontFamily: '"Geist Mono", monospace' }}>WHATSAPP BSP</span>
           </div>
-          <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 15, lineHeight: 1.6, color: muted, margin: 0, maxWidth: 460 }}>
+          <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 15, lineHeight: 1.6, color: muted, margin: '0 auto', maxWidth: 460 }}>
             Preferred partnership for WhatsApp Business Solution Provider support - the backbone of our WhatsApp agent deployments.
           </p>
         </div>

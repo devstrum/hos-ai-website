@@ -1,11 +1,10 @@
-import { THEME, gridBg, CornerTicks, SiteNav, SiteFooter, CONTACT_EMAIL, IntegrationsBanner, TrustedByBar, PartnersStrip, PAD_X, useIsMobile, useCopyEmail } from './theme.jsx';
+import { THEME, gridBg, CornerTicks, SiteNav, SiteFooter, CONTACT_EMAIL, IntegrationsBanner, TrustedByBar, PartnersStrip, PAD_X, useCopyEmail } from './theme.jsx';
 
 // hos-home-content.jsx - HOS AI Homepage
 // Depends on: hos-shared.jsx, roi-calculator.jsx
 
 const HomePage = () => {
   const { bg, ink, accent, muted, rule } = THEME;
-  const isMobile = useIsMobile();
   const [copied, copyEmail] = useCopyEmail(CONTACT_EMAIL);
 
   return (
@@ -50,7 +49,7 @@ const HomePage = () => {
       <TrustedByBar />
 
       {/* ─── SOCIAL PROOF ─── */}
-      <div style={{ padding: `14px ${PAD_X}`, borderBottom: `1px solid ${rule}`, display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap', fontSize: 12, color: muted, fontFamily: '"Geist Mono", monospace' }}>
+      <div style={{ padding: `14px ${PAD_X}`, borderBottom: `1px solid ${rule}`, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, flexWrap: 'wrap', fontSize: 12, color: muted, fontFamily: '"Geist Mono", monospace', textAlign: 'center' }}>
         <span>SEE THE WORK BEHIND THE NETWORK →</span>
         <a href="https://www.instagram.com/houseofshafaq/" target="_blank" rel="noopener" style={{ color: ink, borderBottom: `1px solid ${accent}`, textDecoration: 'none' }}>@houseofshafaq</a>
         <span style={{ opacity: .5 }}>·</span>
@@ -64,55 +63,35 @@ const HomePage = () => {
       <IntegrationsBanner />
 
       {/* ─── WORK INDEX TEASER ─── */}
-      <section id="work" style={{ padding: `0 ${PAD_X}`, borderTop: `1px solid ${ink}`, borderBottom: `1px solid ${ink}` }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '32px 0 8px', flexWrap: 'wrap', gap: 12 }}>
+      <section id="work" style={{ padding: `0 ${PAD_X}`, borderTop: `1px solid ${ink}`, borderBottom: `1px solid ${ink}`, textAlign: 'center' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: '32px 0 8px' }}>
           <h2 style={{ fontFamily: '"Geist", sans-serif', fontSize: 'clamp(28px, 6vw, 40px)', fontWeight: 600, letterSpacing: '-0.03em', margin: 0 }}>Selected work</h2>
           <a href="/work" style={{ fontSize: 11, color: muted, letterSpacing: '.15em', textDecoration: 'none' }}>VIEW ALL →</a>
         </div>
-        {!isMobile && (
-          <div style={{ display: 'grid', gridTemplateColumns: '60px 1fr 200px 120px 100px', padding: '20px 0', borderBottom: `1px solid ${rule}`, fontSize: 11, letterSpacing: '.15em', color: muted }}>
-            <span>NO.</span><span>ITEM</span><span>VERTICAL</span><span>OUTCOME</span><span>YEAR</span>
-          </div>
-        )}
         {[
           ['01', 'WhatsApp support agent', 'ENTERPRISE', '24/7 coverage', '2026'],
           ['02', 'Voice agent · pre & post-sales support', 'ENTERPRISE', 'instant response', '2026'],
           ['03', 'Documentation & admin automation', 'ENTERPRISE', '−40% admin hours', '2025'],
           ['04', 'Lead qualification & routing', 'ENTERPRISE', '2× qualified leads', '2025'],
         ].map(([n, item, v, o, y]) => (
-          <a key={n} href="/work" className="hos-card-link" style={{ textDecoration: 'none', color: 'inherit' }}>
-            {isMobile ? (
-              <div style={{ padding: '20px 0', borderBottom: `1px solid ${rule}` }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8 }}>
-                  <span style={{ color: accent, fontSize: 12 }}>{n}</span>
-                  <span style={{ fontSize: 11, letterSpacing: '.15em', color: muted }}>{y} →</span>
-                </div>
-                <div style={{ fontFamily: '"Geist", sans-serif', fontSize: 19, letterSpacing: '-0.02em', marginBottom: 8 }}>{item}</div>
-                <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', fontSize: 11 }}>
-                  <span style={{ letterSpacing: '.15em', color: muted }}>{v}</span>
-                  <span style={{ color: ink, fontFamily: '"Geist Mono", monospace' }}>{o}</span>
-                </div>
+          <a key={n} href="/work" className="hos-card-link" style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
+            <div style={{ padding: '24px 0', borderBottom: `1px solid ${rule}` }}>
+              <div style={{ fontSize: 11, letterSpacing: '.15em', color: accent, marginBottom: 8 }}>{n} · {y}</div>
+              <div style={{ fontFamily: '"Geist", sans-serif', fontSize: 'clamp(19px, 3vw, 22px)', letterSpacing: '-0.02em', marginBottom: 10 }}>{item}</div>
+              <div style={{ display: 'flex', justifyContent: 'center', gap: 14, flexWrap: 'wrap', fontSize: 11 }}>
+                <span style={{ letterSpacing: '.15em', color: muted }}>{v}</span>
+                <span style={{ color: ink, fontFamily: '"Geist Mono", monospace' }}>{o}</span>
               </div>
-            ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: '60px 1fr 200px 120px 100px', padding: '24px 0', borderBottom: `1px solid ${rule}`, fontSize: 14, alignItems: 'baseline' }}>
-                <span style={{ color: accent }}>{n}</span>
-                <span style={{ fontFamily: '"Geist", sans-serif', fontSize: 22, letterSpacing: '-0.02em' }}>{item}</span>
-                <span style={{ fontSize: 10, letterSpacing: '.15em', color: muted }}>{v}</span>
-                <span style={{ fontSize: 12, color: ink, fontFamily: '"Geist Mono", monospace' }}>{o}</span>
-                <span style={{ fontSize: 11, letterSpacing: '.15em', color: muted }}>{y} →</span>
-              </div>
-            )}
+            </div>
           </a>
         ))}
       </section>
 
       {/* ─── SERVICES TEASER ─── */}
-      <section style={{ padding: `clamp(48px, 10vw, 96px) ${PAD_X}` }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 48, flexWrap: 'wrap', gap: 12 }}>
-          <div>
-            <div style={{ fontSize: 11, color: accent, letterSpacing: '.3em', marginBottom: 16 }}>SERVICES</div>
-            <h2 style={{ fontFamily: '"Geist", sans-serif', fontSize: 'clamp(32px, 6vw, 56px)', fontWeight: 600, letterSpacing: '-0.04em', margin: 0 }}>What we deliver.</h2>
-          </div>
+      <section style={{ padding: `clamp(48px, 10vw, 96px) ${PAD_X}`, textAlign: 'center' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, marginBottom: 48 }}>
+          <div style={{ fontSize: 11, color: accent, letterSpacing: '.3em' }}>SERVICES</div>
+          <h2 style={{ fontFamily: '"Geist", sans-serif', fontSize: 'clamp(32px, 6vw, 56px)', fontWeight: 600, letterSpacing: '-0.04em', margin: 0 }}>What we deliver.</h2>
           <a href="/services" style={{ fontSize: 11, color: muted, letterSpacing: '.15em', textDecoration: 'none' }}>ALL SERVICES →</a>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 1, background: rule, border: `1px solid ${rule}` }}>
@@ -123,9 +102,9 @@ const HomePage = () => {
           ].map(([n, t, d]) => (
             <a key={n} href="/services" className="hos-card-link" style={{ textDecoration: 'none', color: 'inherit' }}>
               <div style={{ background: bg, padding: 28, height: '100%', boxSizing: 'border-box' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 14 }}>
-                  <span style={{ fontFamily: '"Geist", sans-serif', fontSize: 22, fontWeight: 600, letterSpacing: '-0.02em' }}>{t}</span>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, marginBottom: 14 }}>
                   <span style={{ fontSize: 10, color: accent, letterSpacing: '.15em' }}>{n}</span>
+                  <span style={{ fontFamily: '"Geist", sans-serif', fontSize: 22, fontWeight: 600, letterSpacing: '-0.02em' }}>{t}</span>
                 </div>
                 <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 15, lineHeight: 1.6, color: muted, margin: 0 }}>{d}</p>
                 <div style={{ fontSize: 11, color: accent, letterSpacing: '.1em', marginTop: 16 }}>LEARN MORE →</div>
@@ -136,9 +115,9 @@ const HomePage = () => {
       </section>
 
       {/* ─── AUTHORITY STRIP ─── */}
-      <section style={{ padding: `clamp(48px, 10vw, 96px) ${PAD_X}`, borderTop: `1px solid ${ink}` }}>
+      <section style={{ padding: `clamp(48px, 10vw, 96px) ${PAD_X}`, borderTop: `1px solid ${ink}`, textAlign: 'center' }}>
         <div style={{ fontSize: 11, color: accent, letterSpacing: '.3em', marginBottom: 16 }}>WHY HOS AI</div>
-        <h2 style={{ fontFamily: '"Geist", sans-serif', fontSize: 'clamp(32px, 6vw, 56px)', fontWeight: 600, letterSpacing: '-0.04em', margin: '0 0 56px', maxWidth: 760 }}>Senior team. Warm doors in Dubai. Model agnostic.</h2>
+        <h2 style={{ fontFamily: '"Geist", sans-serif', fontSize: 'clamp(32px, 6vw, 56px)', fontWeight: 600, letterSpacing: '-0.04em', margin: '0 auto 56px', maxWidth: 760 }}>Senior team. Warm doors in Dubai. Model agnostic.</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 1, background: rule, border: `1px solid ${rule}` }}>
           {[
             ['Senior, not staffed-out', 'Everyone on your project has shipped production AI systems before. No account managers, no bench.'],
