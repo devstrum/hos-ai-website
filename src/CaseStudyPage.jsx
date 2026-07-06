@@ -1,20 +1,7 @@
-import React from 'react';
 import { THEME, gridBg, CornerTicks, SiteNav, SiteFooter, FaviconOrInitials, PAD_X } from './theme.jsx';
 
-// hos-case-study-content.jsx - HOS AI Work page: featured AI case study + project index
+// hos-case-study-content.jsx - HOS AI Work page: project index
 // (real House of Shafaq brand/production projects, AI systems shipped, and Ringg partner work)
-
-const CASE = {
-  tag: 'FEATURED CASE STUDY · LOGISTICS · MIDMARKET · 6 WEEKS',
-  headline: ['We cut ops labor cost ', 'by ', ['64%', true], ' in one quarter.'],
-  summary: 'A regional 3PL had 14 analysts manually triaging exception tickets - refunds, misroutes, delays. We built a domain-tuned agent that pre-classifies, drafts responses, and routes. Analysts now review, not write.',
-  metrics: [['64%', 'labor cost ↓'], ['14→6', 'analyst hours/day'], ['$310K', 'annual savings']],
-  problem: 'Exception volume had grown 3x in two years without headcount. Analysts spent 80% of their day on repetitive triage - reading tickets, checking systems of record, drafting the same handful of response types.',
-  approach: 'A two-week audit showed 70% of tickets fell into 6 repeatable categories. We scoped a single agent: classify, draft, route - with a human review step for anything below a confidence threshold.',
-  build: 'Weeks 3–5: built the classifier on 18 months of historical tickets, wired it into their existing helpdesk via API, and ran it in shadow mode against live traffic before going active.',
-  result: 'Live since week 6. Auto-resolution rose from 0% to 71%, average resolution time dropped from 13.5 minutes to 4.2, and the team reallocated 3 analysts to higher-value escalation work instead of backfilling headcount.',
-  quote: { text: 'We stopped hiring for this role. The team that\'s left does better work and actually likes their job again.', name: 'VP of Operations', context: 'Regional 3PL · Enterprise client' },
-};
 
 // AI systems HOS AI has shipped - the Home page teasers, in full
 const AI_PROJECTS = [
@@ -44,99 +31,26 @@ const RINGG_PROJECTS = [
 ];
 
 const CaseStudyPage = () => {
-  const { bg, ink, accent, accentDeep, warm, muted, rule } = THEME;
+  const { bg, ink, accent, muted, rule } = THEME;
   return (
     <div style={{ background: bg, color: ink, fontFamily: '"Geist Mono", monospace', minHeight: '100%' }} data-screen-label="Work">
       <SiteNav active="work" />
 
       <section style={{ position: 'relative', padding: `clamp(48px, 10vw, 72px) ${PAD_X} clamp(32px, 8vw, 48px)`, backgroundImage: gridBg }}>
         <CornerTicks />
-        <div style={{ fontSize: 11, color: muted, letterSpacing: '.2em', marginBottom: 16 }}>{CASE.tag}</div>
+        <div style={{ fontSize: 11, color: accent, letterSpacing: '.3em', marginBottom: 24 }}>OUR WORK</div>
         <h1 style={{ fontFamily: '"Geist", sans-serif', fontSize: 'clamp(36px, 8vw, 72px)', fontWeight: 600, letterSpacing: '-0.04em', margin: '0 0 28px', lineHeight: 1.05, maxWidth: 820 }}>
-          {CASE.headline.map((part, i) => Array.isArray(part) ? <span key={i} style={{ color: accent }}>{part[0]}</span> : <React.Fragment key={i}>{part}</React.Fragment>)}
+          What we build, <span style={{ color: accent }}>to name a few.</span>
         </h1>
-        <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 18, lineHeight: 1.55, color: muted, maxWidth: 680, marginBottom: 40 }}>{CASE.summary}</p>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 24, maxWidth: 560, paddingTop: 32, borderTop: `1px solid ${rule}` }}>
-          {CASE.metrics.map(([n, l]) => (
-            <div key={l}>
-              <div style={{ fontFamily: '"Geist", sans-serif', fontSize: 'clamp(24px, 5vw, 34px)', fontWeight: 600, letterSpacing: '-0.03em', color: ink }}>{n}</div>
-              <div style={{ fontFamily: 'Inter, sans-serif', fontSize: 11, color: muted, marginTop: 4, letterSpacing: '.05em' }}>{l}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Narrative */}
-      <section style={{ padding: `clamp(48px, 10vw, 96px) ${PAD_X}`, borderTop: `1px solid ${ink}` }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 64 }}>
-          <div>
-            {[['PROBLEM', CASE.problem], ['APPROACH', CASE.approach], ['BUILD', CASE.build]].map(([label, text]) => (
-              <div key={label} style={{ marginBottom: 40 }}>
-                <div style={{ fontSize: 11, color: accent, letterSpacing: '.2em', marginBottom: 12 }}>{label}</div>
-                <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 15, lineHeight: 1.65, color: 'rgba(14,26,43,.8)', margin: 0 }}>{text}</p>
-              </div>
-            ))}
-
-            {/* Saad credit */}
-            <div style={{ borderLeft: `2px solid ${accent}`, paddingLeft: 20, marginTop: 8 }}>
-              <p style={{ fontFamily: '"Geist", sans-serif', fontSize: 17, fontWeight: 500, letterSpacing: '-0.01em', lineHeight: 1.45, margin: '0 0 10px', fontStyle: 'italic' }}>
-                "This is exactly the kind of work I want HOS AI known for - measurable, fast, no fluff."
-              </p>
-              <div style={{ fontSize: 12, color: muted, fontFamily: 'Inter, sans-serif' }}>Saad Mohammed · Founder, House of Shafaq</div>
-            </div>
-          </div>
-
-          <div>
-            <div style={{ fontSize: 11, color: accent, letterSpacing: '.2em', marginBottom: 12 }}>RESULT</div>
-            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 15, lineHeight: 1.65, color: 'rgba(14,26,43,.8)', margin: '0 0 32px' }}>{CASE.result}</p>
-
-            {/* Dashboard visual */}
-            <div style={{ border: `2px solid ${ink}`, background: '#fafbfd', padding: 24, marginBottom: 32 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: muted, letterSpacing: '.15em', marginBottom: 18 }}>
-                <span>EXCEPTIONS · LAST 30D</span><span>▾ ALL ROUTES</span>
-              </div>
-              <svg viewBox="0 0 480 180" style={{ width: '100%' }}>
-                {[120, 132, 108, 145, 138, 88, 64, 58, 51, 46, 42, 39, 41, 38, 35].map((v, i) => {
-                  const recent = i >= 6;
-                  return <rect key={i} x={i * 30 + 10} y={170 - v} width="22" height={v} fill={recent ? accent : 'rgba(14,26,43,.2)'} />;
-                })}
-                <line x1="0" y1="170" x2="480" y2="170" stroke={ink} strokeWidth="0.8" />
-                <line x1="190" y1="20" x2="190" y2="170" stroke={warm} strokeWidth="1" strokeDasharray="3 3" />
-                <text x="194" y="32" fontSize="9" fontFamily="Geist Mono" fill={warm} letterSpacing="1">HOS AI SHIPPED →</text>
-              </svg>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16, marginTop: 24, paddingTop: 20, borderTop: `1px solid ${rule}` }}>
-                {[['Auto-resolved', '71%', '+18pp'], ['Avg. resolution', '4.2m', '-9.3m'], ['CSAT', '4.8', '+0.4']].map(([label, value, trend]) => (
-                  <div key={label}>
-                    <div style={{ fontSize: 9, color: muted, letterSpacing: '.1em', textTransform: 'uppercase', marginBottom: 4, fontFamily: 'Inter, sans-serif' }}>{label}</div>
-                    <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
-                      <span style={{ fontFamily: '"Geist", sans-serif', fontSize: 20, fontWeight: 600, letterSpacing: '-0.02em' }}>{value}</span>
-                      <span style={{ fontFamily: '"Geist Mono", monospace', fontSize: 10, color: accentDeep }}>{trend}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Client quote */}
-            <div style={{ borderLeft: `2px solid ${accent}`, paddingLeft: 20 }}>
-              <p style={{ fontFamily: '"Geist", sans-serif', fontSize: 20, fontWeight: 500, letterSpacing: '-0.01em', lineHeight: 1.4, margin: '0 0 12px', fontStyle: 'italic' }}>
-                "{CASE.quote.text}"
-              </p>
-              <div style={{ fontSize: 12, color: muted, fontFamily: 'Inter, sans-serif' }}>{CASE.quote.name} · {CASE.quote.context}</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section style={{ padding: `0 ${PAD_X} clamp(48px, 10vw, 96px)` }}>
-        <a href="/#work" style={{ fontSize: 12, color: muted, letterSpacing: '.15em', textDecoration: 'none', borderBottom: `1px solid ${rule}`, paddingBottom: 2 }}>← BACK TO ALL WORK</a>
+        <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 18, lineHeight: 1.55, color: muted, maxWidth: 680 }}>
+          AI systems shipped for clients across the UK, UAE, India, and Australia, plus the Ringg-powered voice/WhatsApp deployments and House of Shafaq production work behind the network.
+        </p>
       </section>
 
       {/* AI systems shipped */}
       <section style={{ padding: `clamp(48px, 10vw, 96px) ${PAD_X}`, borderTop: `1px solid ${ink}` }}>
         <div style={{ fontSize: 11, color: accent, letterSpacing: '.3em', marginBottom: 16 }}>AI SYSTEMS SHIPPED</div>
-        <h2 style={{ fontFamily: '"Geist", sans-serif', fontSize: 'clamp(28px, 6vw, 44px)', fontWeight: 600, letterSpacing: '-0.04em', margin: '0 0 48px' }}>What we build, to name a few.</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 1, background: rule, border: `1px solid ${rule}` }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 1, background: rule, border: `1px solid ${rule}`, marginTop: 24 }}>
           {AI_PROJECTS.map(([t, d, o]) => (
             <div key={t} style={{ background: bg, padding: 24 }}>
               <div style={{ fontFamily: '"Geist", sans-serif', fontSize: 18, fontWeight: 600, letterSpacing: '-0.02em', marginBottom: 10 }}>{t}</div>
@@ -182,7 +96,7 @@ const CaseStudyPage = () => {
         </div>
       </section>
 
-      <SiteFooter heading="Want a result" headingAccent="like this one?" />
+      <SiteFooter heading="Let's build" headingAccent="what's next." />
     </div>
   );
 };
