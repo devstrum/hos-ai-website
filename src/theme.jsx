@@ -10,7 +10,7 @@ const THEME = {
   accent: '#1d4ed8',
   accentDeep: '#14329e',
   warm: '#c95f3b',
-  muted: 'rgba(14,26,43,.55)',
+  muted: 'rgba(14,26,43,.7)',
   rule: 'rgba(14,26,43,.1)',
 };
 
@@ -35,6 +35,21 @@ const useIsMobile = (breakpoint = 760) => {
   return isMobile;
 };
 
+// mailto: links silently fail in some in-app browsers (e.g. WhatsApp's webview),
+// so the CTA also copies the address to clipboard as a fallback the user can see.
+// Only claims success if the copy actually worked, so it never shows a false confirmation.
+const useCopyEmail = (email) => {
+  const [copied, setCopied] = React.useState(false);
+  const copyEmail = React.useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(email);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2200);
+    } catch {}
+  }, [email]);
+  return [copied, copyEmail];
+};
+
 const CornerTicks = () => (
   <React.Fragment>
     {[0, 1, 2, 3].map(i => (
@@ -52,27 +67,15 @@ const CornerTicks = () => (
   </React.Fragment>
 );
 
-// ─── HOS AI wordmark - same bracket-mark visual system as Scafld, re-skinned ───
+// ─── HOS AI wordmark ───
 const HOSLogo = ({ height = 22, onDark = false, accent = THEME.accent }) => {
   const ink = onDark ? '#fafaf7' : THEME.ink;
-  const m = height * 1.0;
   const fs = height * 0.95;
-  const stroke = Math.max(2, height * 0.085);
   return (
-    <div style={{ display: 'inline-flex', alignItems: 'center', gap: height * 0.3 }}>
-      <svg viewBox="0 0 60 80" style={{ width: m * 0.75, height: m, flexShrink: 0 }}>
-        <g fill="none" stroke={ink} strokeWidth={stroke} strokeLinecap="square">
-          <path d="M30 6 L6 6 L6 74 L30 74" />
-          <path d="M30 6 L54 6 L54 74 L30 74" />
-          <line x1="6" y1="40" x2="54" y2="40" />
-        </g>
-        <circle cx="30" cy="40" r={stroke * 1.4} fill={accent} />
-      </svg>
-      <span style={{ fontFamily: '"Geist", sans-serif', fontWeight: 600, fontSize: fs, letterSpacing: '-0.03em', lineHeight: 1, color: ink, display: 'inline-flex', alignItems: 'baseline', gap: fs * 0.14 }}>
-        HOS
-        <span style={{ fontSize: fs * 0.62, fontWeight: 600, color: accent, letterSpacing: '.08em' }}>AI</span>
-      </span>
-    </div>
+    <span style={{ fontFamily: '"Geist", sans-serif', fontWeight: 600, fontSize: fs, letterSpacing: '-0.03em', lineHeight: 1, color: ink, display: 'inline-flex', alignItems: 'baseline', gap: fs * 0.14 }}>
+      HOS
+      <span style={{ fontSize: fs * 0.62, fontWeight: 600, color: accent, letterSpacing: '.08em' }}>AI</span>
+    </span>
   );
 };
 
@@ -95,6 +98,7 @@ const CONTACT_EMAIL = 'hello@ai.houseofshafaq.com';
 const SiteNav = ({ active }) => {
   const isMobile = useIsMobile();
   const [open, setOpen] = React.useState(false);
+  const [copied, copyEmail] = useCopyEmail(CONTACT_EMAIL);
   React.useEffect(() => { if (!isMobile) setOpen(false); }, [isMobile]);
 
   return (
@@ -109,6 +113,8 @@ const SiteNav = ({ active }) => {
     @keyframes hos-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
     .hos-marquee-track { animation: hos-marquee 30s linear infinite; }
     .hos-marquee-track:hover { animation-play-state: paused; }
+    .hos-card-link { display: block; transition: transform .15s ease, box-shadow .15s ease; }
+    .hos-card-link:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(14,26,43,.1); position: relative; z-index: 1; }
   `}</style>
   <header style={{
     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
@@ -131,25 +137,32 @@ const SiteNav = ({ active }) => {
             </a>
           ))}
         </nav>
-        <a href={`mailto:${CONTACT_EMAIL}`} style={{ textDecoration: 'none' }}>
-          <button style={{ padding: '8px 16px', background: THEME.ink, color: THEME.bg, border: 0, fontSize: 11, fontWeight: 600, letterSpacing: '.15em', fontFamily: 'inherit', cursor: 'pointer' }}>
-            BOOK INTAKE
+        <a href={`mailto:${CONTACT_EMAIL}`} onClick={copyEmail} style={{ textDecoration: 'none' }}>
+          <button style={{ padding: '8px 16px', background: THEME.ink, color: THEME.bg, border: 0, fontSize: 11, fontWeight: 600, letterSpacing: '.15em', fontFamily: 'inherit', cursor: 'pointer', whiteSpace: 'nowrap' }}>
+            {copied ? 'EMAIL COPIED ✓' : 'BOOK INTAKE'}
           </button>
         </a>
       </React.Fragment>
     )}
 
     {isMobile && (
-      <button
-        onClick={() => setOpen(o => !o)}
-        aria-label={open ? 'Close menu' : 'Open menu'}
-        aria-expanded={open}
-        style={{ background: 'transparent', border: 0, padding: 8, cursor: 'pointer', display: 'flex', flexDirection: 'column', gap: 5, flexShrink: 0 }}
-      >
-        <span style={{ width: 22, height: 2, background: THEME.ink, transition: 'transform .15s ease', transform: open ? 'translateY(7px) rotate(45deg)' : 'none' }} />
-        <span style={{ width: 22, height: 2, background: THEME.ink, opacity: open ? 0 : 1, transition: 'opacity .15s ease' }} />
-        <span style={{ width: 22, height: 2, background: THEME.ink, transition: 'transform .15s ease', transform: open ? 'translateY(-7px) rotate(-45deg)' : 'none' }} />
-      </button>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+        <a href={`mailto:${CONTACT_EMAIL}`} onClick={copyEmail} style={{ textDecoration: 'none', flexShrink: 0 }}>
+          <button style={{ padding: '8px 12px', background: THEME.ink, color: THEME.bg, border: 0, fontSize: 10, fontWeight: 600, letterSpacing: '.1em', fontFamily: 'inherit', cursor: 'pointer', whiteSpace: 'nowrap' }}>
+            {copied ? 'COPIED ✓' : 'BOOK INTAKE'}
+          </button>
+        </a>
+        <button
+          onClick={() => setOpen(o => !o)}
+          aria-label={open ? 'Close menu' : 'Open menu'}
+          aria-expanded={open}
+          style={{ background: 'transparent', border: 0, padding: 8, cursor: 'pointer', display: 'flex', flexDirection: 'column', gap: 5, flexShrink: 0 }}
+        >
+          <span style={{ width: 22, height: 2, background: THEME.ink, transition: 'transform .15s ease', transform: open ? 'translateY(7px) rotate(45deg)' : 'none' }} />
+          <span style={{ width: 22, height: 2, background: THEME.ink, opacity: open ? 0 : 1, transition: 'opacity .15s ease' }} />
+          <span style={{ width: 22, height: 2, background: THEME.ink, transition: 'transform .15s ease', transform: open ? 'translateY(-7px) rotate(-45deg)' : 'none' }} />
+        </button>
+      </div>
     )}
   </header>
 
@@ -168,9 +181,9 @@ const SiteNav = ({ active }) => {
           {l.label}
         </a>
       ))}
-      <a href={`mailto:${CONTACT_EMAIL}`} style={{ textDecoration: 'none', marginTop: 16 }}>
+      <a href={`mailto:${CONTACT_EMAIL}`} onClick={copyEmail} style={{ textDecoration: 'none', marginTop: 16 }}>
         <button style={{ width: '100%', padding: '14px 16px', background: THEME.ink, color: THEME.bg, border: 0, fontSize: 12, fontWeight: 600, letterSpacing: '.15em', fontFamily: 'inherit', cursor: 'pointer' }}>
-          BOOK INTAKE
+          {copied ? 'EMAIL COPIED ✓' : 'BOOK INTAKE'}
         </button>
       </a>
     </nav>
@@ -179,14 +192,16 @@ const SiteNav = ({ active }) => {
   );
 };
 
-const SiteFooter = ({ heading = "Let's build your", headingAccent = 'AI arm.' }) => (
+const SiteFooter = ({ heading = "Let's build your", headingAccent = 'AI arm.' }) => {
+  const [copied, copyEmail] = useCopyEmail(CONTACT_EMAIL);
+  return (
   <section id="contact" style={{ padding: `clamp(56px, 14vw, 120px) ${PAD_X}`, borderTop: `1px solid ${THEME.ink}` }}>
     <h2 style={{ fontFamily: '"Geist", sans-serif', fontSize: 'clamp(38px, 9vw, 88px)', fontWeight: 600, letterSpacing: '-0.05em', margin: '0 0 32px', lineHeight: 1 }}>
       {heading}<br /><span style={{ color: THEME.accent }}>{headingAccent}</span>
     </h2>
     <div style={{ display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
-      <a href={`mailto:${CONTACT_EMAIL}`} style={{ textDecoration: 'none' }}>
-        <button style={{ padding: '18px 28px', background: THEME.ink, color: THEME.bg, border: 0, fontSize: 12, fontWeight: 600, letterSpacing: '.2em', fontFamily: 'inherit', cursor: 'pointer' }}>BOOK INTAKE →</button>
+      <a href={`mailto:${CONTACT_EMAIL}`} onClick={copyEmail} style={{ textDecoration: 'none' }}>
+        <button style={{ padding: '18px 28px', background: THEME.ink, color: THEME.bg, border: 0, fontSize: 12, fontWeight: 600, letterSpacing: '.2em', fontFamily: 'inherit', cursor: 'pointer' }}>{copied ? 'EMAIL COPIED ✓' : 'BOOK INTAKE →'}</button>
       </a>
       <span style={{ fontSize: 13, color: THEME.muted, fontFamily: '"Geist Mono", monospace' }}>
         or email <span style={{ color: THEME.ink, borderBottom: `1px solid ${THEME.accent}` }}>{CONTACT_EMAIL}</span>
@@ -216,7 +231,8 @@ const SiteFooter = ({ heading = "Let's build your", headingAccent = 'AI arm.' })
       </nav>
     </footer>
   </section>
-);
+  );
+};
 
 const favSrc = (domain) => `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
 const initials = (name) => name.split(' ').map(w => w[0]).join('').slice(0, 2);
@@ -325,7 +341,7 @@ const PartnersStrip = () => {
             <span style={{ fontFamily: '"Geist", sans-serif', fontSize: 'clamp(22px, 4vw, 28px)', fontWeight: 600, letterSpacing: '-0.03em' }}>Ringg</span>
             <span style={{ fontSize: 9, color: accent, letterSpacing: '.1em', border: `1px solid ${accent}`, borderRadius: 3, padding: '2px 6px', fontFamily: '"Geist Mono", monospace' }}>VOICE AI · UAE</span>
           </div>
-          <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 14, lineHeight: 1.6, color: muted, margin: '0 0 16px', maxWidth: 460 }}>
+          <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 15, lineHeight: 1.6, color: muted, margin: '0 0 16px', maxWidth: 460 }}>
             Our preferred voice AI infrastructure. We're model & vendor agnostic - Ringg is what we curate and select for most conversational deployments in the UAE.
           </p>
           <div style={{ fontSize: 10, color: muted, letterSpacing: '.15em', marginBottom: 10 }}>SUCCESS STORIES · BUILT ON RINGG</div>
@@ -344,7 +360,7 @@ const PartnersStrip = () => {
             <span style={{ fontFamily: '"Geist", sans-serif', fontSize: 'clamp(22px, 4vw, 28px)', fontWeight: 600, letterSpacing: '-0.03em' }}>Meta</span>
             <span style={{ fontSize: 9, color: accent, letterSpacing: '.1em', border: `1px solid ${accent}`, borderRadius: 3, padding: '2px 6px', fontFamily: '"Geist Mono", monospace' }}>WHATSAPP BSP</span>
           </div>
-          <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 14, lineHeight: 1.6, color: muted, margin: 0, maxWidth: 460 }}>
+          <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 15, lineHeight: 1.6, color: muted, margin: 0, maxWidth: 460 }}>
             Preferred partnership for WhatsApp Business Solution Provider support - the backbone of our WhatsApp agent deployments.
           </p>
         </div>
@@ -353,4 +369,4 @@ const PartnersStrip = () => {
   );
 };
 
-export { THEME, gridBg, CornerTicks, HOSLogo, SiteNav, SiteFooter, NAV_LINKS, CONTACT, CONTACT_EMAIL, IntegrationsBanner, TrustedByBar, PartnersStrip, FaviconOrInitials, TRUSTED_BY, RINGG_SUCCESS, INTEGRATIONS, PAD_X, useIsMobile };
+export { THEME, gridBg, CornerTicks, HOSLogo, SiteNav, SiteFooter, NAV_LINKS, CONTACT, CONTACT_EMAIL, IntegrationsBanner, TrustedByBar, PartnersStrip, FaviconOrInitials, TRUSTED_BY, RINGG_SUCCESS, INTEGRATIONS, PAD_X, useIsMobile, useCopyEmail };

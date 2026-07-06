@@ -140,7 +140,7 @@ const CaseStudyPage = () => {
           {AI_PROJECTS.map(([t, d, o]) => (
             <div key={t} style={{ background: bg, padding: 24 }}>
               <div style={{ fontFamily: '"Geist", sans-serif', fontSize: 18, fontWeight: 600, letterSpacing: '-0.02em', marginBottom: 10 }}>{t}</div>
-              <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 12.5, lineHeight: 1.55, color: muted, margin: '0 0 14px' }}>{d}</p>
+              <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 14, lineHeight: 1.6, color: muted, margin: '0 0 14px' }}>{d}</p>
               <div style={{ fontSize: 11, color: accent, fontFamily: '"Geist Mono", monospace' }}>{o}</div>
             </div>
           ))}
@@ -171,7 +171,7 @@ const CaseStudyPage = () => {
         </p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 1, background: rule, border: `1px solid ${rule}` }}>
           {HOS_PROJECTS.map(([t, cat, href]) => (
-            <a key={t} href={href} target="_blank" rel="noopener" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <a key={t} href={href} target="_blank" rel="noopener" className="hos-card-link" style={{ textDecoration: 'none', color: 'inherit' }}>
               <div style={{ background: bg, padding: 22, height: '100%', boxSizing: 'border-box' }}>
                 <div style={{ fontSize: 9, color: muted, letterSpacing: '.15em', marginBottom: 10 }}>{cat.toUpperCase()}</div>
                 <div style={{ fontFamily: '"Geist", sans-serif', fontSize: 15, fontWeight: 600, letterSpacing: '-0.01em', lineHeight: 1.3 }}>{t}</div>

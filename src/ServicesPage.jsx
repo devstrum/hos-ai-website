@@ -77,13 +77,13 @@ const ServicesPage = () => {
                 <h3 style={{ fontFamily: '"Geist", sans-serif', fontSize: 36, fontWeight: 600, letterSpacing: '-0.03em', margin: 0 }}>{s.t}</h3>
               </div>
               <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 15, lineHeight: 1.6, color: muted, margin: '0 0 16px' }}>{s.d}</p>
-              <div style={{ fontSize: 12, color: ink, fontFamily: 'Inter, sans-serif' }}>
+              <div style={{ fontSize: 13, color: ink, fontFamily: 'Inter, sans-serif' }}>
                 <span style={{ color: muted }}>Best for: </span>{s.who}
               </div>
             </div>
             <div>
               <div style={{ fontSize: 10, color: muted, letterSpacing: '.15em', textTransform: 'uppercase', marginBottom: 14 }}>What you get</div>
-              <ul style={{ fontFamily: 'Inter, sans-serif', fontSize: 14, lineHeight: 1.8, color: ink, padding: 0, listStyle: 'none', margin: '0 0 20px' }}>
+              <ul style={{ fontFamily: 'Inter, sans-serif', fontSize: 15, lineHeight: 1.8, color: ink, padding: 0, listStyle: 'none', margin: '0 0 20px' }}>
                 {s.get.map(g => <li key={g}>→ {g}</li>)}
               </ul>
               <div style={{ fontFamily: '"Geist Mono", monospace', fontSize: 11, color: accent, letterSpacing: '.1em', paddingTop: 12, borderTop: `1px dashed ${rule}`, display: 'inline-block' }}>{s.time}</div>

@@ -74,7 +74,7 @@ const AboutPage = () => {
                 <span style={{ fontFamily: '"Geist", sans-serif', fontSize: 20, fontWeight: 600, letterSpacing: '-0.02em' }}>{p.name}</span>
               </div>
               <div style={{ fontSize: 9, color: accent, letterSpacing: '.12em', marginBottom: 10 }}>{p.tag}</div>
-              <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 13, lineHeight: 1.55, color: muted, margin: p.success ? '0 0 16px' : 0 }}>{p.desc}</p>
+              <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 15, lineHeight: 1.6, color: muted, margin: p.success ? '0 0 16px' : 0 }}>{p.desc}</p>
               {p.success && (
                 <React.Fragment>
                   <div style={{ fontSize: 9, color: muted, letterSpacing: '.12em', marginBottom: 8 }}>SUCCESS STORIES</div>
@@ -104,7 +104,7 @@ const AboutPage = () => {
                 <span style={{ fontFamily: '"Geist", sans-serif', fontSize: 24, fontWeight: 600, letterSpacing: '-0.02em' }}>{t}</span>
                 <span style={{ fontSize: 10, color: accent, letterSpacing: '.15em' }}>{n}</span>
               </div>
-              <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 14, lineHeight: 1.6, color: muted, margin: 0 }}>{d}</p>
+              <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 15, lineHeight: 1.6, color: muted, margin: 0 }}>{d}</p>
             </div>
           ))}
         </div>

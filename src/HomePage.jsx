@@ -1,4 +1,4 @@
-import { THEME, gridBg, CornerTicks, SiteNav, SiteFooter, CONTACT_EMAIL, IntegrationsBanner, TrustedByBar, PartnersStrip, PAD_X, useIsMobile } from './theme.jsx';
+import { THEME, gridBg, CornerTicks, SiteNav, SiteFooter, CONTACT_EMAIL, IntegrationsBanner, TrustedByBar, PartnersStrip, PAD_X, useIsMobile, useCopyEmail } from './theme.jsx';
 
 // hos-home-content.jsx - HOS AI Homepage
 // Depends on: hos-shared.jsx, roi-calculator.jsx
@@ -6,6 +6,7 @@ import { THEME, gridBg, CornerTicks, SiteNav, SiteFooter, CONTACT_EMAIL, Integra
 const HomePage = () => {
   const { bg, ink, accent, muted, rule } = THEME;
   const isMobile = useIsMobile();
+  const [copied, copyEmail] = useCopyEmail(CONTACT_EMAIL);
 
   return (
     <div style={{ background: bg, color: ink, fontFamily: '"Geist Mono", monospace', minHeight: '100%' }} data-screen-label="Home">
@@ -26,8 +27,8 @@ const HomePage = () => {
             We design and ship AI systems that cut labor costs and create new revenue - deployed in six weeks. Backed by House of Shafaq's network across Dubai.
           </p>
           <div style={{ display: 'flex', gap: 12, marginTop: 40, flexWrap: 'wrap' }}>
-            <a href={`mailto:${CONTACT_EMAIL}`} style={{ textDecoration: 'none' }}>
-              <button style={{ padding: '14px 26px', background: ink, color: bg, border: 0, fontSize: 12, fontWeight: 600, letterSpacing: '.18em', fontFamily: 'inherit', cursor: 'pointer' }}>BOOK INTAKE →</button>
+            <a href={`mailto:${CONTACT_EMAIL}`} onClick={copyEmail} style={{ textDecoration: 'none' }}>
+              <button style={{ padding: '14px 26px', background: ink, color: bg, border: 0, fontSize: 12, fontWeight: 600, letterSpacing: '.18em', fontFamily: 'inherit', cursor: 'pointer' }}>{copied ? 'EMAIL COPIED ✓' : 'BOOK INTAKE →'}</button>
             </a>
             <a href="/services" style={{ textDecoration: 'none' }}>
               <button style={{ padding: '14px 26px', background: bg, color: ink, border: `1px solid ${ink}`, fontSize: 12, fontWeight: 600, letterSpacing: '.18em', fontFamily: 'inherit', cursor: 'pointer' }}>SEE SERVICES</button>
@@ -78,7 +79,7 @@ const HomePage = () => {
           ['03', 'Documentation & admin automation', 'ENTERPRISE', '−40% admin hours', '2025'],
           ['04', 'Lead qualification & routing', 'ENTERPRISE', '2× qualified leads', '2025'],
         ].map(([n, item, v, o, y]) => (
-          <a key={n} href="/work" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <a key={n} href="/work" className="hos-card-link" style={{ textDecoration: 'none', color: 'inherit' }}>
             {isMobile ? (
               <div style={{ padding: '20px 0', borderBottom: `1px solid ${rule}` }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8 }}>
@@ -119,13 +120,14 @@ const HomePage = () => {
             ['A.2', 'Custom Agents', 'Single-purpose agents tuned to one workflow, embedded in your tools.'],
             ['A.3', 'RAG & Copilots', 'Production retrieval and copilots calibrated to your data and team.'],
           ].map(([n, t, d]) => (
-            <a key={n} href="/services" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <a key={n} href="/services" className="hos-card-link" style={{ textDecoration: 'none', color: 'inherit' }}>
               <div style={{ background: bg, padding: 28, height: '100%', boxSizing: 'border-box' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 14 }}>
                   <span style={{ fontFamily: '"Geist", sans-serif', fontSize: 22, fontWeight: 600, letterSpacing: '-0.02em' }}>{t}</span>
                   <span style={{ fontSize: 10, color: accent, letterSpacing: '.15em' }}>{n}</span>
                 </div>
-                <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 13, lineHeight: 1.55, color: muted, margin: 0 }}>{d}</p>
+                <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 15, lineHeight: 1.6, color: muted, margin: 0 }}>{d}</p>
+                <div style={{ fontSize: 11, color: accent, letterSpacing: '.1em', marginTop: 16 }}>LEARN MORE →</div>
               </div>
             </a>
           ))}
@@ -144,7 +146,7 @@ const HomePage = () => {
           ].map(([t, d]) => (
             <div key={t} style={{ background: bg, padding: 32 }}>
               <div style={{ fontFamily: '"Geist", sans-serif', fontSize: 20, fontWeight: 600, letterSpacing: '-0.02em', marginBottom: 12 }}>{t}</div>
-              <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 14, lineHeight: 1.6, color: muted, margin: 0 }}>{d}</p>
+              <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 15, lineHeight: 1.6, color: muted, margin: 0 }}>{d}</p>
             </div>
           ))}
         </div>
