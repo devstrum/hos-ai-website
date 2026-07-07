@@ -1,4 +1,4 @@
-import { THEME, gridBg, CornerTicks, SiteNav, SiteFooter, IntegrationsBanner, PAD_X } from './theme.jsx';
+import { THEME, gridBg, CornerTicks, SiteNav, SiteFooter, IntegrationsBanner, PAD_X, Reveal, SEO } from './theme.jsx';
 
 // hos-services-content.jsx - HOS AI Services detail page
 // Depends on: hos-shared.jsx
@@ -52,9 +52,25 @@ const ServicesPage = () => {
   const { bg, ink, accent, muted, rule } = THEME;
   return (
     <div style={{ background: bg, color: ink, fontFamily: '"Geist Mono", monospace', minHeight: '100%' }} data-screen-label="Services">
+      <SEO
+        title="AI Consulting Services — Audits, Agents, RAG & Voice AI"
+        description="Six ways HOS AI's automation agency puts AI to work: AI readiness audits, custom agents, RAG systems, voice & WhatsApp agents, evals & ops, and embedded AI teams — each scoped to a measurable outcome."
+        path="/services"
+        jsonLd={{
+          '@context': 'https://schema.org',
+          '@type': 'ItemList',
+          itemListElement: SERVICES_DETAIL.map((s, i) => ({
+            '@type': 'Service',
+            position: i + 1,
+            name: s.t,
+            description: s.d,
+            provider: { '@type': 'ProfessionalService', name: 'HOS AI' },
+          })),
+        }}
+      />
       <SiteNav active="services" />
 
-      <section style={{ position: 'relative', padding: `clamp(48px, 10vw, 72px) ${PAD_X} clamp(36px, 8vw, 56px)`, backgroundImage: gridBg, textAlign: 'center' }}>
+      <Reveal as="section" style={{ position: 'relative', padding: `clamp(48px, 10vw, 72px) ${PAD_X} clamp(36px, 8vw, 56px)`, backgroundImage: gridBg, textAlign: 'center' }}>
         <CornerTicks />
         <div style={{ fontSize: 11, color: accent, letterSpacing: '.3em', marginBottom: 24 }}>SERVICES</div>
         <h1 style={{ fontFamily: '"Geist", sans-serif', fontWeight: 600, fontSize: 'clamp(38px, 9vw, 80px)', lineHeight: .96, letterSpacing: '-0.05em', margin: '0 auto 24px', maxWidth: 780 }}>
@@ -63,13 +79,13 @@ const ServicesPage = () => {
         <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 18, lineHeight: 1.5, color: muted, maxWidth: 620, margin: '0 auto' }}>
           Every engagement is scoped to a measurable outcome - hours reclaimed, cost cut, revenue created. Pick one, or run several in sequence.
         </p>
-      </section>
+      </Reveal>
 
       <IntegrationsBanner />
 
       <section style={{ padding: `clamp(48px, 10vw, 96px) ${PAD_X}`, textAlign: 'center' }}>
         {SERVICES_DETAIL.map((s, i) => (
-          <div key={s.n} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, padding: '48px 0', borderTop: i === 0 ? 'none' : `1px solid ${rule}`, maxWidth: 640, marginLeft: 'auto', marginRight: 'auto' }}>
+          <Reveal key={s.n} delay={Math.min(i * 0.06, 0.3)} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, padding: '48px 0', borderTop: i === 0 ? 'none' : `1px solid ${rule}`, maxWidth: 640, marginLeft: 'auto', marginRight: 'auto' }}>
             <div style={{ fontSize: 12, color: accent, letterSpacing: '.15em', fontFamily: '"Geist Mono", monospace' }}>{s.n}</div>
             <h3 style={{ fontFamily: '"Geist", sans-serif', fontSize: 36, fontWeight: 600, letterSpacing: '-0.03em', margin: 0 }}>{s.t}</h3>
             <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 15, lineHeight: 1.6, color: muted, margin: 0 }}>{s.d}</p>
@@ -81,7 +97,7 @@ const ServicesPage = () => {
               {s.get.map(g => <li key={g}>{g}</li>)}
             </ul>
             <div style={{ fontFamily: '"Geist Mono", monospace', fontSize: 11, color: accent, letterSpacing: '.1em', paddingTop: 12, borderTop: `1px dashed ${rule}`, display: 'inline-block' }}>{s.time}</div>
-          </div>
+          </Reveal>
         ))}
       </section>
 

@@ -1,4 +1,4 @@
-import { THEME, gridBg, CornerTicks, SiteNav, SiteFooter, IntegrationsBanner, FaviconOrInitials, PAD_X } from './theme.jsx';
+import { THEME, gridBg, CornerTicks, SiteNav, SiteFooter, IntegrationsBanner, FaviconOrInitials, PAD_X, Reveal, SEO } from './theme.jsx';
 
 // hos-about-content.jsx - HOS AI About/Team page
 // Depends on: hos-shared.jsx
@@ -19,9 +19,14 @@ const AboutPage = () => {
   const { bg, ink, accent, muted, rule } = THEME;
   return (
     <div style={{ background: bg, color: ink, fontFamily: '"Geist Mono", monospace', minHeight: '100%' }} data-screen-label="About">
+      <SEO
+        title="About HOS AI — The AI Arm of House of Shafaq"
+        description="HOS AI is the AI automation arm of House of Shafaq - a studio of engineers and researchers shipping production AI for clients across the UK, UAE, India, and Australia. Backed by Saad Mohammed's Dubai network."
+        path="/about"
+      />
       <SiteNav active="about" />
 
-      <section style={{ position: 'relative', padding: `clamp(48px, 10vw, 72px) ${PAD_X} clamp(36px, 8vw, 56px)`, backgroundImage: gridBg, textAlign: 'center' }}>
+      <Reveal as="section" style={{ position: 'relative', padding: `clamp(48px, 10vw, 72px) ${PAD_X} clamp(36px, 8vw, 56px)`, backgroundImage: gridBg, textAlign: 'center' }}>
         <CornerTicks />
         <div style={{ fontSize: 11, color: accent, letterSpacing: '.3em', marginBottom: 24 }}>ABOUT</div>
         <h1 style={{ fontFamily: '"Geist", sans-serif', fontWeight: 600, fontSize: 'clamp(36px, 8vw, 72px)', lineHeight: 1.05, letterSpacing: '-0.04em', margin: '0 auto 28px', maxWidth: 780 }}>
@@ -30,12 +35,12 @@ const AboutPage = () => {
         <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 18, lineHeight: 1.55, color: muted, maxWidth: 640, margin: '0 auto' }}>
           HOS AI is the AI arm of House of Shafaq - a studio of engineers and researchers who've shipped production AI before, backed by a Dubai network built over a decade of brand work. We work with clients across the UK, UAE, India, and Australia. We don't sell strategy decks - we build the scaffold, ship the system, and hand you the keys.
         </p>
-      </section>
+      </Reveal>
 
       <IntegrationsBanner />
 
       {/* Backed by Saad */}
-      <section style={{ padding: `clamp(48px, 10vw, 96px) ${PAD_X}`, borderTop: `1px solid ${ink}`, textAlign: 'center' }}>
+      <Reveal as="section" style={{ padding: `clamp(48px, 10vw, 96px) ${PAD_X}`, borderTop: `1px solid ${ink}`, textAlign: 'center' }}>
         <div style={{ fontSize: 11, color: accent, letterSpacing: '.3em', marginBottom: 24 }}>BACKED BY</div>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24, maxWidth: 640, marginLeft: 'auto', marginRight: 'auto' }}>
           <div style={{ width: 180, aspectRatio: '1', background: 'rgba(14,26,43,.04)', border: `1px solid ${rule}`, overflow: 'hidden', display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
@@ -59,10 +64,10 @@ const AboutPage = () => {
             <div style={{ fontSize: 12, color: muted, fontFamily: 'Inter, sans-serif' }}>Saad Mohammed · Founder, House of Shafaq</div>
           </div>
         </div>
-      </section>
+      </Reveal>
 
       {/* Partners */}
-      <section style={{ padding: `clamp(48px, 10vw, 96px) ${PAD_X}`, borderTop: `1px solid ${ink}`, textAlign: 'center' }}>
+      <Reveal as="section" style={{ padding: `clamp(48px, 10vw, 96px) ${PAD_X}`, borderTop: `1px solid ${ink}`, textAlign: 'center' }}>
         <div style={{ fontSize: 11, color: accent, letterSpacing: '.3em', marginBottom: 16 }}>PARTNERS</div>
         <h2 style={{ fontFamily: '"Geist", sans-serif', fontSize: 'clamp(32px, 6vw, 56px)', fontWeight: 600, letterSpacing: '-0.04em', margin: '0 0 56px' }}>The network we build on.</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 1, background: rule, border: `1px solid ${rule}` }}>
@@ -77,10 +82,10 @@ const AboutPage = () => {
             </div>
           ))}
         </div>
-      </section>
+      </Reveal>
 
       {/* Principles */}
-      <section style={{ padding: `clamp(48px, 10vw, 96px) ${PAD_X}`, textAlign: 'center' }}>
+      <Reveal as="section" style={{ padding: `clamp(48px, 10vw, 96px) ${PAD_X}`, textAlign: 'center' }}>
         <div style={{ fontSize: 11, color: accent, letterSpacing: '.3em', marginBottom: 16 }}>HOW WE OPERATE</div>
         <h2 style={{ fontFamily: '"Geist", sans-serif', fontSize: 'clamp(32px, 6vw, 56px)', fontWeight: 600, letterSpacing: '-0.04em', margin: '0 0 56px' }}>Four principles.</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(420px, 100%), 1fr))', gap: 1, background: rule, border: `1px solid ${rule}`, maxWidth: 900, margin: '0 auto' }}>
@@ -94,7 +99,7 @@ const AboutPage = () => {
             </div>
           ))}
         </div>
-      </section>
+      </Reveal>
 
       <SiteFooter heading="Want to work" headingAccent="with us?" />
     </div>

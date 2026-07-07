@@ -1,0 +1,25 @@
+# HOS AI
+
+> HOS AI is the AI automation arm of House of Shafaq - a Dubai-based AI automation agency and consultancy that designs and ships production AI systems for businesses across the UK, UAE, India, and Australia.
+
+## What we do
+- AI Audit: two-week diagnostic that maps workflows, scores AI-readiness, and picks the highest-leverage wedge.
+- Custom Agents: single-purpose agents (triage, drafting, routing, research) embedded directly in the tools a team already uses.
+- RAG Systems: production-grade retrieval over internal knowledge (policies, tickets, contracts, wikis).
+- Voice & WhatsApp Agents: inbound/outbound voice AI and WhatsApp support agents, built on Ringg and Meta's WhatsApp Business Solution Provider platform.
+- Evals & Ops: monitoring, drift detection, and regression testing for AI systems already in production.
+- Embedded Team: fractional AI engineering, month-to-month, no lock-in.
+
+## Who we serve
+Founders and growing businesses across the UK, UAE, India, and Australia who want to cut labor costs and create new revenue with AI, typically deployed within six weeks.
+
+## Pages
+- Home: https://ai.houseofshafaq.com/
+- Services: https://ai.houseofshafaq.com/services
+- Work: https://ai.houseofshafaq.com/work
+- About: https://ai.houseofshafaq.com/about
+
+## Contact
+- Email: hello@ai.houseofshafaq.com
+- Phone: +971 4 575 7813
+- Address: 101, Barsha Valley, Al Barsha, Dubai, UAE

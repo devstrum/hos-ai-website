@@ -35,6 +35,160 @@ const useIsMobile = (breakpoint = 760) => {
   return isMobile;
 };
 
+const usePrefersReducedMotion = () => {
+  const query = '(prefers-reduced-motion: reduce)';
+  const [reduced, setReduced] = React.useState(() =>
+    typeof window !== 'undefined' ? window.matchMedia(query).matches : false
+  );
+  React.useEffect(() => {
+    const mql = window.matchMedia(query);
+    const onChange = (e) => setReduced(e.matches);
+    mql.addEventListener('change', onChange);
+    return () => mql.removeEventListener('change', onChange);
+  }, []);
+  return reduced;
+};
+
+// Fades + lifts an element into place the first time it scrolls into view.
+// Pass `as` to control the rendered tag (e.g. "section") so it doesn't add
+// an extra wrapper div around layout-sensitive elements.
+const Reveal = ({ children, delay = 0, y = 16, as: Tag = 'div', style, ...rest }) => {
+  const ref = React.useRef(null);
+  const [visible, setVisible] = React.useState(false);
+  const reducedMotion = usePrefersReducedMotion();
+
+  React.useEffect(() => {
+    if (reducedMotion) { setVisible(true); return; }
+    const node = ref.current;
+    if (!node) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setVisible(true);
+        observer.disconnect();
+      }
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [reducedMotion]);
+
+  return (
+    <Tag
+      ref={ref}
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? 'translateY(0)' : `translateY(${y}px)`,
+        transition: `opacity .6s ease ${delay}s, transform .6s ease ${delay}s`,
+        ...style,
+      }}
+      {...rest}
+    >
+      {children}
+    </Tag>
+  );
+};
+
+// Counts up to a value like "3.2×", "$1.4M+", or "12+" once it scrolls into
+// view - only the numeric portion animates, prefix/suffix stay put.
+const CountUp = ({ value, duration = 1200 }) => {
+  const ref = React.useRef(null);
+  const [started, setStarted] = React.useState(false);
+  const [display, setDisplay] = React.useState(value);
+  const reducedMotion = usePrefersReducedMotion();
+  // Memoized on `value` (not recomputed every render) - otherwise the fresh
+  // array from .match() on each render would retrigger the effects below
+  // forever, restarting the animation before it ever finishes.
+  const match = React.useMemo(() => String(value).match(/^([^0-9.]*)([0-9]+(?:\.[0-9]+)?)(.*)$/), [value]);
+
+  React.useEffect(() => {
+    if (reducedMotion || !match) return;
+    const node = ref.current;
+    if (!node) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setStarted(true);
+        observer.disconnect();
+      }
+    }, { threshold: 0.5 });
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [reducedMotion, match]);
+
+  React.useEffect(() => {
+    if (!started || !match) return;
+    const [, prefix, numStr, suffix] = match;
+    const target = parseFloat(numStr);
+    const decimals = (numStr.split('.')[1] || '').length;
+    const startTime = performance.now();
+    let frame;
+    const tick = (now) => {
+      const progress = Math.min((now - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setDisplay(`${prefix}${(target * eased).toFixed(decimals)}${suffix}`);
+      if (progress < 1) frame = requestAnimationFrame(tick);
+      else setDisplay(value);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [started, match, duration, value]);
+
+  return <span ref={ref}>{match ? display : value}</span>;
+};
+
+const SITE_URL = 'https://ai.houseofshafaq.com';
+
+// Sets per-page title/meta/canonical/OG tags and JSON-LD structured data.
+// This runs client-side (the site is a Vite SPA) - Google and Bing execute
+// JS and pick this up, but crawlers that don't render JS (some AI answer
+// engines) only see the static defaults baked into index.html.
+const SEO = ({ title, description, path = '/', jsonLd }) => {
+  React.useEffect(() => {
+    const fullTitle = title ? `${title} · HOS AI` : 'HOS AI · The AI arm of House of Shafaq';
+    document.title = fullTitle;
+
+    const upsertMeta = (attr, key, content) => {
+      let tag = document.head.querySelector(`meta[${attr}="${key}"]`);
+      if (!tag) {
+        tag = document.createElement('meta');
+        tag.setAttribute(attr, key);
+        document.head.appendChild(tag);
+      }
+      tag.setAttribute('content', content);
+    };
+
+    if (description) {
+      upsertMeta('name', 'description', description);
+      upsertMeta('property', 'og:description', description);
+      upsertMeta('name', 'twitter:description', description);
+    }
+    upsertMeta('property', 'og:title', fullTitle);
+    upsertMeta('name', 'twitter:title', fullTitle);
+    upsertMeta('property', 'og:url', `${SITE_URL}${path}`);
+
+    let canonical = document.head.querySelector('link[rel="canonical"]');
+    if (!canonical) {
+      canonical = document.createElement('link');
+      canonical.setAttribute('rel', 'canonical');
+      document.head.appendChild(canonical);
+    }
+    canonical.setAttribute('href', `${SITE_URL}${path}`);
+
+    let script = document.getElementById('seo-jsonld');
+    if (jsonLd) {
+      if (!script) {
+        script = document.createElement('script');
+        script.id = 'seo-jsonld';
+        script.type = 'application/ld+json';
+        document.head.appendChild(script);
+      }
+      script.textContent = JSON.stringify(jsonLd);
+    } else if (script) {
+      script.remove();
+    }
+  }, [title, description, path, jsonLd]);
+
+  return null;
+};
+
 const CornerTicks = () => (
   <React.Fragment>
     {[0, 1, 2, 3].map(i => (
@@ -100,6 +254,13 @@ const SiteNav = ({ active }) => {
     .hos-marquee-track:hover { animation-play-state: paused; }
     .hos-card-link { display: block; transition: transform .15s ease, box-shadow .15s ease; }
     .hos-card-link:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(14,26,43,.1); position: relative; z-index: 1; }
+    button { transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease; }
+    button:hover { transform: translateY(-1px); }
+    button:active { transform: translateY(0); }
+    a { transition: color .15s ease, border-color .15s ease, opacity .15s ease; }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+    }
   `}</style>
   <header style={{
     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
@@ -337,4 +498,4 @@ const PartnersStrip = () => {
   );
 };
 
-export { THEME, gridBg, CornerTicks, HOSLogo, SiteNav, SiteFooter, NAV_LINKS, CONTACT, CONTACT_EMAIL, BOOKING_URL, IntegrationsBanner, TrustedByBar, PartnersStrip, FaviconOrInitials, TRUSTED_BY, INTEGRATIONS, PAD_X, useIsMobile };
+export { THEME, gridBg, CornerTicks, HOSLogo, SiteNav, SiteFooter, NAV_LINKS, CONTACT, CONTACT_EMAIL, BOOKING_URL, IntegrationsBanner, TrustedByBar, PartnersStrip, FaviconOrInitials, TRUSTED_BY, INTEGRATIONS, PAD_X, useIsMobile, Reveal, CountUp, SEO, SITE_URL };
