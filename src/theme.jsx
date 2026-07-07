@@ -35,21 +35,6 @@ const useIsMobile = (breakpoint = 760) => {
   return isMobile;
 };
 
-// mailto: links silently fail in some in-app browsers (e.g. WhatsApp's webview),
-// so the CTA also copies the address to clipboard as a fallback the user can see.
-// Only claims success if the copy actually worked, so it never shows a false confirmation.
-const useCopyEmail = (email) => {
-  const [copied, setCopied] = React.useState(false);
-  const copyEmail = React.useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(email);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2200);
-    } catch {}
-  }, [email]);
-  return [copied, copyEmail];
-};
-
 const CornerTicks = () => (
   <React.Fragment>
     {[0, 1, 2, 3].map(i => (
@@ -94,11 +79,11 @@ const NAV_LINKS = [
 ];
 
 const CONTACT_EMAIL = 'hello@ai.houseofshafaq.com';
+const BOOKING_URL = 'https://calendar.app.google/oUsGs4GDQw5cNn4E8';
 
 const SiteNav = ({ active }) => {
   const isMobile = useIsMobile();
   const [open, setOpen] = React.useState(false);
-  const [copied, copyEmail] = useCopyEmail(CONTACT_EMAIL);
   React.useEffect(() => { if (!isMobile) setOpen(false); }, [isMobile]);
 
   return (
@@ -137,9 +122,9 @@ const SiteNav = ({ active }) => {
             </a>
           ))}
         </nav>
-        <a href={`mailto:${CONTACT_EMAIL}`} onClick={copyEmail} style={{ textDecoration: 'none' }}>
+        <a href={BOOKING_URL} target="_blank" rel="noopener" style={{ textDecoration: 'none' }}>
           <button style={{ padding: '8px 16px', background: THEME.ink, color: THEME.bg, border: 0, fontSize: 11, fontWeight: 600, letterSpacing: '.15em', fontFamily: 'inherit', cursor: 'pointer', whiteSpace: 'nowrap' }}>
-            {copied ? 'EMAIL COPIED ✓' : 'BOOK INTAKE'}
+            BOOK INTAKE
           </button>
         </a>
       </React.Fragment>
@@ -147,9 +132,9 @@ const SiteNav = ({ active }) => {
 
     {isMobile && (
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-        <a href={`mailto:${CONTACT_EMAIL}`} onClick={copyEmail} style={{ textDecoration: 'none', flexShrink: 0 }}>
+        <a href={BOOKING_URL} target="_blank" rel="noopener" style={{ textDecoration: 'none', flexShrink: 0 }}>
           <button style={{ padding: '8px 12px', background: THEME.ink, color: THEME.bg, border: 0, fontSize: 10, fontWeight: 600, letterSpacing: '.1em', fontFamily: 'inherit', cursor: 'pointer', whiteSpace: 'nowrap' }}>
-            {copied ? 'COPIED ✓' : 'BOOK INTAKE'}
+            BOOK INTAKE
           </button>
         </a>
         <button
@@ -181,9 +166,9 @@ const SiteNav = ({ active }) => {
           {l.label}
         </a>
       ))}
-      <a href={`mailto:${CONTACT_EMAIL}`} onClick={copyEmail} style={{ textDecoration: 'none', marginTop: 16 }}>
+      <a href={BOOKING_URL} target="_blank" rel="noopener" style={{ textDecoration: 'none', marginTop: 16 }}>
         <button style={{ width: '100%', padding: '14px 16px', background: THEME.ink, color: THEME.bg, border: 0, fontSize: 12, fontWeight: 600, letterSpacing: '.15em', fontFamily: 'inherit', cursor: 'pointer' }}>
-          {copied ? 'EMAIL COPIED ✓' : 'BOOK INTAKE'}
+          BOOK INTAKE
         </button>
       </a>
     </nav>
@@ -193,18 +178,17 @@ const SiteNav = ({ active }) => {
 };
 
 const SiteFooter = ({ heading = "Let's build your", headingAccent = 'AI arm.' }) => {
-  const [copied, copyEmail] = useCopyEmail(CONTACT_EMAIL);
   return (
   <section id="contact" style={{ padding: `clamp(56px, 14vw, 120px) ${PAD_X}`, borderTop: `1px solid ${THEME.ink}`, textAlign: 'center' }}>
     <h2 style={{ fontFamily: '"Geist", sans-serif', fontSize: 'clamp(38px, 9vw, 88px)', fontWeight: 600, letterSpacing: '-0.05em', margin: '0 0 32px', lineHeight: 1 }}>
       {heading}<br /><span style={{ color: THEME.accent }}>{headingAccent}</span>
     </h2>
     <div style={{ display: 'flex', gap: 16, alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }}>
-      <a href={`mailto:${CONTACT_EMAIL}`} onClick={copyEmail} style={{ textDecoration: 'none' }}>
-        <button style={{ padding: '18px 28px', background: THEME.ink, color: THEME.bg, border: 0, fontSize: 12, fontWeight: 600, letterSpacing: '.2em', fontFamily: 'inherit', cursor: 'pointer' }}>{copied ? 'EMAIL COPIED ✓' : 'BOOK INTAKE →'}</button>
+      <a href={BOOKING_URL} target="_blank" rel="noopener" style={{ textDecoration: 'none' }}>
+        <button style={{ padding: '18px 28px', background: THEME.ink, color: THEME.bg, border: 0, fontSize: 12, fontWeight: 600, letterSpacing: '.2em', fontFamily: 'inherit', cursor: 'pointer' }}>BOOK INTAKE →</button>
       </a>
       <span style={{ fontSize: 13, color: THEME.muted, fontFamily: '"Geist Mono", monospace' }}>
-        or email <span style={{ color: THEME.ink, borderBottom: `1px solid ${THEME.accent}` }}>{CONTACT_EMAIL}</span>
+        or email <a href={`mailto:${CONTACT_EMAIL}`} style={{ color: THEME.ink, borderBottom: `1px solid ${THEME.accent}`, textDecoration: 'none' }}>{CONTACT_EMAIL}</a>
       </span>
     </div>
     <div style={{ marginTop: 56, maxWidth: 640, marginLeft: 'auto', marginRight: 'auto' }}>
@@ -321,13 +305,6 @@ const TrustedByBar = ({ label = 'CLIENTS ACROSS UK · UAE · INDIA · AUSTRALIA'
   );
 };
 
-// Ringg's success stories - shown once, inside the Partners strip
-const RINGG_SUCCESS = [
-  { name: 'noon', domain: 'noon.com', href: 'https://www.noon.com' },
-  { name: 'Tabby', domain: 'tabby.ai', href: 'https://tabby.ai' },
-  { name: 'Tamara', domain: 'tamara.co', href: 'https://tamara.co' },
-];
-
 // Preferred-partner callout (Ringg + Meta) - use ONCE per page.
 const PartnersStrip = () => {
   const { ink, accent, muted, rule, bg } = THEME;
@@ -341,18 +318,9 @@ const PartnersStrip = () => {
             <span style={{ fontFamily: '"Geist", sans-serif', fontSize: 'clamp(22px, 4vw, 28px)', fontWeight: 600, letterSpacing: '-0.03em' }}>Ringg</span>
             <span style={{ fontSize: 9, color: accent, letterSpacing: '.1em', border: `1px solid ${accent}`, borderRadius: 3, padding: '2px 6px', fontFamily: '"Geist Mono", monospace' }}>VOICE AI · UAE</span>
           </div>
-          <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 15, lineHeight: 1.6, color: muted, margin: '0 auto 16px', maxWidth: 460 }}>
+          <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 15, lineHeight: 1.6, color: muted, margin: '0 auto', maxWidth: 460 }}>
             Our preferred voice AI infrastructure. We're model & vendor agnostic - Ringg is what we curate and select for most conversational deployments in the UAE.
           </p>
-          <div style={{ fontSize: 10, color: muted, letterSpacing: '.15em', marginBottom: 10 }}>SUCCESS STORIES · BUILT ON RINGG</div>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 20, flexWrap: 'wrap' }}>
-            {RINGG_SUCCESS.map(c => (
-              <a key={c.name} href={c.href} target="_blank" rel="noopener" className="hos-success-link" style={{ display: 'flex', alignItems: 'center', gap: 6, textDecoration: 'none' }}>
-                <FaviconOrInitials name={c.name} domain={c.domain} size={16} />
-                <span style={{ fontFamily: '"Geist", sans-serif', fontSize: 13, color: THEME.ink }}>{c.name}</span>
-              </a>
-            ))}
-          </div>
         </div>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, marginBottom: 14, flexWrap: 'wrap' }}>
@@ -369,4 +337,4 @@ const PartnersStrip = () => {
   );
 };
 
-export { THEME, gridBg, CornerTicks, HOSLogo, SiteNav, SiteFooter, NAV_LINKS, CONTACT, CONTACT_EMAIL, IntegrationsBanner, TrustedByBar, PartnersStrip, FaviconOrInitials, TRUSTED_BY, RINGG_SUCCESS, INTEGRATIONS, PAD_X, useIsMobile, useCopyEmail };
+export { THEME, gridBg, CornerTicks, HOSLogo, SiteNav, SiteFooter, NAV_LINKS, CONTACT, CONTACT_EMAIL, BOOKING_URL, IntegrationsBanner, TrustedByBar, PartnersStrip, FaviconOrInitials, TRUSTED_BY, INTEGRATIONS, PAD_X, useIsMobile };

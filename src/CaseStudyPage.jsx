@@ -1,4 +1,4 @@
-import { THEME, gridBg, CornerTicks, SiteNav, SiteFooter, FaviconOrInitials, PAD_X } from './theme.jsx';
+import { THEME, gridBg, CornerTicks, SiteNav, SiteFooter, PAD_X } from './theme.jsx';
 
 // hos-case-study-content.jsx - HOS AI Work page: project index
 // (real House of Shafaq brand/production projects, AI systems shipped, and Ringg partner work)
@@ -21,13 +21,6 @@ const HOS_PROJECTS = [
   ['Adil Qadri Perfumes', 'Reels', 'https://www.houseofshafaq.com/projects/adil-qadri-organic-content'],
   ['Brands for Less · Eid Campaign', 'Mid-level ads', 'https://www.houseofshafaq.com/projects/eid-campaign'],
   ['Kibs', 'Mid-level ads', 'https://www.houseofshafaq.com/projects/kibs'],
-];
-
-// Voice/WhatsApp deployments via our Ringg partnership
-const RINGG_PROJECTS = [
-  { name: 'noon', domain: 'noon.com' },
-  { name: 'Tabby', domain: 'tabby.ai' },
-  { name: 'Tamara', domain: 'tamara.co' },
 ];
 
 const CaseStudyPage = () => {
@@ -61,20 +54,6 @@ const CaseStudyPage = () => {
         </div>
       </section>
 
-      {/* Ringg-powered deployments */}
-      <section style={{ padding: `0 ${PAD_X} clamp(48px, 10vw, 96px)`, textAlign: 'center' }}>
-        <div style={{ fontSize: 11, color: accent, letterSpacing: '.3em', marginBottom: 16 }}>VOICE & WHATSAPP · VIA RINGG</div>
-        <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 15, color: muted, maxWidth: 560, margin: '0 auto 24px' }}>Our preferred voice AI partner Ringg's success stories in the region include:</p>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: 32, flexWrap: 'wrap' }}>
-          {RINGG_PROJECTS.map(c => (
-            <div key={c.name} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <FaviconOrInitials name={c.name} domain={c.domain} size={22} />
-              <span style={{ fontFamily: '"Geist", sans-serif', fontSize: 16, color: ink }}>{c.name}</span>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* House of Shafaq brand & production projects */}
       <section style={{ padding: `0 ${PAD_X} clamp(48px, 10vw, 96px)`, textAlign: 'center' }}>
         <div style={{ fontSize: 11, color: accent, letterSpacing: '.3em', marginBottom: 16 }}>BRAND & PRODUCTION WORK · VIA HOUSE OF SHAFAQ</div>
@@ -83,7 +62,7 @@ const CaseStudyPage = () => {
           HOS AI is backed by House of Shafaq's decade of brand and production work across the region - a sample below, more at{' '}
           <a href="https://www.houseofshafaq.com/projects" target="_blank" rel="noopener" style={{ color: ink, borderBottom: `1px solid ${accent}`, textDecoration: 'none' }}>houseofshafaq.com/projects</a>.
         </p>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 1, background: rule, border: `1px solid ${rule}` }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(230px, 100%), 1fr))', gap: 1, background: rule, border: `1px solid ${rule}`, maxWidth: 1000, margin: '0 auto' }}>
           {HOS_PROJECTS.map(([t, cat, href]) => (
             <a key={t} href={href} target="_blank" rel="noopener" className="hos-card-link" style={{ textDecoration: 'none', color: 'inherit' }}>
               <div style={{ background: bg, padding: 22, height: '100%', boxSizing: 'border-box', textAlign: 'center' }}>

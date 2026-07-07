@@ -1,11 +1,10 @@
-import { THEME, gridBg, CornerTicks, SiteNav, SiteFooter, CONTACT_EMAIL, IntegrationsBanner, TrustedByBar, PartnersStrip, PAD_X, useCopyEmail } from './theme.jsx';
+import { THEME, gridBg, CornerTicks, SiteNav, SiteFooter, BOOKING_URL, IntegrationsBanner, TrustedByBar, PartnersStrip, PAD_X } from './theme.jsx';
 
 // hos-home-content.jsx - HOS AI Homepage
 // Depends on: hos-shared.jsx, roi-calculator.jsx
 
 const HomePage = () => {
   const { bg, ink, accent, muted, rule } = THEME;
-  const [copied, copyEmail] = useCopyEmail(CONTACT_EMAIL);
 
   return (
     <div style={{ background: bg, color: ink, fontFamily: '"Geist Mono", monospace', minHeight: '100%' }} data-screen-label="Home">
@@ -27,8 +26,8 @@ const HomePage = () => {
             We design and ship AI systems that cut labor costs and create new revenue - deployed in six weeks. Backed by House of Shafaq's network across Dubai.
           </p>
           <div style={{ display: 'flex', gap: 12, marginTop: 40, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <a href={`mailto:${CONTACT_EMAIL}`} onClick={copyEmail} style={{ textDecoration: 'none' }}>
-              <button style={{ padding: '14px 26px', background: ink, color: bg, border: 0, fontSize: 12, fontWeight: 600, letterSpacing: '.18em', fontFamily: 'inherit', cursor: 'pointer' }}>{copied ? 'EMAIL COPIED ✓' : 'BOOK INTAKE →'}</button>
+            <a href={BOOKING_URL} target="_blank" rel="noopener" style={{ textDecoration: 'none' }}>
+              <button style={{ padding: '14px 26px', background: ink, color: bg, border: 0, fontSize: 12, fontWeight: 600, letterSpacing: '.18em', fontFamily: 'inherit', cursor: 'pointer' }}>BOOK INTAKE →</button>
             </a>
             <a href="/services" style={{ textDecoration: 'none' }}>
               <button style={{ padding: '14px 26px', background: bg, color: ink, border: `1px solid ${ink}`, fontSize: 12, fontWeight: 600, letterSpacing: '.18em', fontFamily: 'inherit', cursor: 'pointer' }}>SEE SERVICES</button>
